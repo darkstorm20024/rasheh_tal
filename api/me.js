@@ -1,0 +1,1 @@
+const {profile,reply,adminOK}=require('./_shared');module.exports=async(req,res)=>{try{const p=await profile(req);reply(res,200,{user:{company_name:p.company_name,contact_name:p.contact_name,email:p.email,credits_balance:p.credits_balance,is_admin:adminOK(p)}})}catch(e){reply(res,401,{detail:e.message})}};
