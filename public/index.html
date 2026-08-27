@@ -1,1 +1,100 @@
-<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>رَشّح | Rasheh Talent</title><style>:root{--b:#061326;--p:#0d213c;--l:#294970;--g:#ffb81c;--m:#a9bbd3;--w:#f6f9ff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#193a65,#061326 52%);color:var(--w);font-family:Arial,sans-serif}.wrap{max-width:1200px;margin:auto;padding:0 20px}.hidden{display:none!important}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0}.auth{min-height:100vh;display:grid;place-items:center}.box,.card{background:#0c1d35;border:1px solid var(--l);border-radius:20px;padding:22px}.box{width:min(480px,92vw)}input,textarea,select{width:100%;margin:5px 0 12px;padding:12px;background:#061326;border:1px solid var(--l);color:white;border-radius:10px}.gold{background:linear-gradient(135deg,#ffe173,var(--g));color:#201707;font-weight:bold;padding:12px 16px;border-radius:10px}.dark{background:#173354;color:white;padding:12px 16px;border-radius:10px}.tabs,.nav{display:flex;gap:8px;flex-wrap:wrap}.tabs button,.nav button{padding:9px;background:#132b4c;color:#d9e5f8;border-radius:9px}.tabs .on,.nav .on{background:var(--g);color:#1e1605}.head{height:75px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:27px;color:var(--g);font-weight:900}.brand small{font-size:9px;color:#ffe6a2;letter-spacing:3px}.hero{text-align:center;padding:78px 0 52px}.pill{background:#3d2c09;border:1px solid #83601a;padding:7px 12px;border-radius:20px;color:#ffe5a0;font-size:12px}.hero h1{font-size:clamp(31px,5vw,58px);line-height:1.35}.hero p,.muted{color:var(--m);line-height:1.9}.grid3,.plans,.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.section{padding:38px 0}.title{text-align:center;font-size:27px}.page{display:none}.page.on{display:block}.trust{text-align:center;border-block:1px solid #1c385c;padding:20px;color:#c5d2e4}.logos{display:flex;justify-content:space-around;flex-wrap:wrap;gap:15px;margin-top:14px;font-weight:bold}.video{min-height:210px;display:grid;place-items:center;text-align:center;background:#102a4c;border-radius:20px;border:1px solid var(--l)}.search{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end}.candidate{margin:12px 0}.row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.match{background:#3b2a08;color:#ffe69e;border:1px solid #80601d;padding:6px;border-radius:15px}.meta{color:var(--m);font-size:12px;margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}.price{font-size:35px;color:#ffe5a0;font-weight:bold}.featured{border:2px solid var(--g)}.adminnav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}.adminnav button{background:#173354;color:white;padding:9px;border-radius:8px}.adminpanel{display:none}.adminpanel.on{display:block}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border-bottom:1px solid var(--l);padding:9px;text-align:right}.footer{text-align:center;border-top:1px solid #1c385c;padding:28px;margin-top:50px;color:#8193ad}@media(max-width:760px){.nav{display:none}.grid3,.plans,.stats,.search{grid-template-columns:1fr}.head{height:65px}}</style><body><section id="auth" class="auth"><div class="box"><div style="text-align:center"><div class="brand">رَشّح</div><small>RASHEH TALENT</small><p class="muted">منصة الشركات لاستقطاب الكفاءات</p></div><div class="tabs"><button id="loginTab" class="on">تسجيل الدخول</button><button id="regTab">حساب جديد +2 CV</button></div><p id="msg" class="muted"></p><div id="login"><input id="le" placeholder="البريد الإلكتروني" type="email"><input id="lp" placeholder="كلمة المرور" type="password"><button class="gold" onclick="loginUser()">دخول</button></div><div id="reg" class="hidden"><input id="co" placeholder="اسم الشركة"><input id="cn" placeholder="اسم مسؤول التوظيف"><input id="re" placeholder="البريد المهني" type="email"><input id="ph" placeholder="الهاتف"><input id="rp" placeholder="كلمة المرور" type="password"><button class="gold" onclick="registerUser()">إنشاء الحساب</button></div></div></section><section id="app" class="hidden"><header class="wrap head"><div class="brand">رَشّح <small>RASHEH TALENT</small></div><nav class="nav"><button class="on" onclick="go('home',this)">الرئيسية</button><button onclick="go('search',this)">المطابقة والترشيح</button><button onclick="go('plans',this)">الباقات</button><button id="adminBtn" class="hidden" onclick="go('admin',this)">لوحة الإدارة</button></nav><span id="credit" class="match">0 CV</span></header><main class="wrap"><section id="home" class="page on"><div class="hero"><span class="pill">⚡ مدعوم بالذكاء الاصطناعي والفرز الدقيق</span><h1 id="heroTitle">وظّف أفضل الكفاءات في ثوانٍ مع منصة رَشّح الذكية</h1><p id="heroText">محرك ذكي يربط الشركات بالكفاءات الجاهزة ويُسرّع قرار التوظيف.</p><button class="gold" onclick="go('search')">ابدأ البحث والمطابقة ←</button></div><div class="trust">موثوق به من أصحاب الأعمال<div class="logos"><span>ARAMCO SUPPLY</span><span>AL-RAJHI CORP</span><span>ELM TECH</span><span>NEOM PARTNERS</span></div></div><div class="section"><h2 class="title">كيف تعمل المنصة؟</h2><div class="grid3"><div class="card">🎯<h3>حدد احتياجك</h3><p>ابحث بالمسمى والمدينة والخبرة والمهارات.</p></div><div class="card">✨<h3>راجع التطابق</h3><p>شاهد نسبة تطابق واضحة وبيانات مهنية منظمة.</p></div><div class="card">🔓<h3>افتح السيرة</h3><p>يخصم CV واحد ثم يكشف وسيلة التواصل والسيرة.</p></div></div></div><div class="section"><h2 class="title" id="videoTitle">جولة سريعة في المنصة</h2><div class="video"><div><div style="font-size:45px">▶</div><h3 id="videoCaption">كيف توفر منصة رَشّح وقت ومصاريف التوظيف؟</h3><p id="videoText" class="muted"></p><a id="videoLink" class="gold" target="_blank">مشاهدة الفيديو</a></div></div></div><div class="section"><h2 class="title">آخر الأخبار والتقارير</h2><div id="news" class="grid3"></div></div></section><section id="search" class="page section"><h2 class="title">المطابقة والترشيح الذكي</h2><div class="card search"><div><label>المسمى الوظيفي</label><input id="job" placeholder="مثال: محاسب أو مدير مبيعات"></div><div><label>المدينة</label><input id="city" placeholder="الرياض"></div><div><label>الخبرة</label><input id="exp" type="number" value="0"></div><div><label>المهارات</label><input id="skills" placeholder="Excel, HR"></div><button class="gold" onclick="search()">بحث فوري 🚀</button></div><h3>المرشحون المطابقون: <span id="count">0</span></h3><div id="results" class="muted">ابدأ البحث لعرض النتائج.</div></section><section id="plans" class="page section"><h2 class="title">باقات شحن رصيد السير الذاتية</h2><div class="plans"><div class="card"><h3>باقة الانطلاق</h3><div class="price">199 ريال</div><p>5 CV كاملة</p><button class="dark" onclick="bank()">طلب شحن الباقة</button></div><div class="card featured"><h3>باقة الشركات المتقدمة</h3><div class="price">699 ريال</div><p>25 CV كاملة</p><button class="gold" onclick="bank()">طلب شحن الباقة</button></div><div class="card"><h3>باقة التوظيف المفتوحة</h3><div class="price">1999 ريال</div><p>100 CV كاملة</p><button class="dark" onclick="bank()">طلب شحن الباقة</button></div></div></section><section id="admin" class="page section"><h2 class="title">لوحة إدارة منصة رَشّح</h2><div class="adminnav"><button onclick="panel('dashboard')">الإحصاءات</button><button onclick="panel('content')">الصفحة الرئيسية والمقالات</button><button onclick="panel('social')">روابط التواصل والبنك</button><button onclick="panel('clients')">الشركات</button><button onclick="panel('requests')">طلبات CV</button></div><div id="dashboard" class="adminpanel on"><div class="stats"><div class="card">المرشحون<div id="sc" class="price">—</div></div><div class="card">الشركات<div id="ss" class="price">—</div></div><div class="card">السير المفتوحة<div id="su" class="price">—</div></div></div></div><div id="content" class="adminpanel card"><h3>تعديل الصفحة الرئيسية</h3><input id="ah" placeholder="عنوان الصفحة الرئيسية"><textarea id="at" placeholder="وصف الصفحة الرئيسية"></textarea><input id="vt" placeholder="عنوان الفيديو"><textarea id="vx" placeholder="وصف الفيديو"></textarea><input id="vu" placeholder="رابط فيديو يوتيوب"><h3>المقالات والأخبار</h3><textarea id="an" placeholder='أدخل المقالات بصيغة: العنوان | التصنيف | الوصف — كل مقال في سطر'></textarea><button class="gold" onclick="saveContent()">حفظ محتوى الصفحة والمقالات</button></div><div id="social" class="adminpanel card"><h3>روابط التواصل والحساب البنكي</h3><input id="wa" placeholder="رابط WhatsApp"><input id="li" placeholder="رابط LinkedIn"><input id="ig" placeholder="رابط Instagram"><input id="xx" placeholder="رابط X"><input id="em" placeholder="بريد التواصل"><input id="bn" placeholder="اسم البنك"><input id="ba" placeholder="اسم صاحب الحساب"><input id="ib" placeholder="IBAN"><button class="gold" onclick="saveSocial()">حفظ الروابط والبيانات</button></div><div id="clients" class="adminpanel card"><h3>الشركات المسجلة</h3><div id="clientTable"></div></div><div id="requests" class="adminpanel card"><h3>طلبات فتح السير الذاتية</h3><div id="requestTable"></div></div></section></main><footer class="footer">© منصة رَشّح لاستقطاب الكفاءات <span id="socialLinks"></span></footer></section><script>let token=localStorage.rtoken||'',me=null,content={};const $=x=>document.getElementById(x);async function api(p,o={}){let r=await fetch('/api'+p,{...o,headers:{'Content-Type':'application/json',...(o.headers||{})}}),d=await r.json();if(!r.ok)throw Error(d.detail||'فشل الطلب');return d}loginTab.onclick=()=>{login.classList.remove('hidden');reg.classList.add('hidden');loginTab.classList.add('on');regTab.classList.remove('on')};regTab.onclick=()=>{reg.classList.remove('hidden');login.classList.add('hidden');regTab.classList.add('on');loginTab.classList.remove('on')};async function registerUser(){try{let d=await api('/auth/register',{method:'POST',body:JSON.stringify({company_name:co.value,contact_name:cn.value,email:re.value,phone:ph.value,password:rp.value})});msg.textContent=d.message;loginTab.click();le.value=re.value}catch(e){msg.textContent=e.message}}async function loginUser(){try{let d=await api('/auth/login',{method:'POST',body:JSON.stringify({email:le.value,password:lp.value})});token=d.access_token;localStorage.rtoken=token;start(d.user)}catch(e){msg.textContent=e.message}}function start(u){me=u;auth.classList.add('hidden');app.classList.remove('hidden');credit.textContent=u.credits_balance+' CV';if(u.is_admin)adminBtn.classList.remove('hidden');loadContent()}function go(id,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));$(id).classList.add('on');if(b)document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on')),b.classList.add('on');if(id==='admin')loadAdmin()}function panel(x){document.querySelectorAll('.adminpanel').forEach(e=>e.classList.remove('on'));$(x).classList.add('on');if(x==='clients')clients();if(x==='requests')requests()}async function loadContent(){let d=await api('/cms/content');content=d.content;heroTitle.textContent=content.hero_title;heroText.textContent=content.hero_text;videoCaption.textContent=content.video_title;videoText.textContent=content.video_text;videoLink.href=content.video_url||'#';videoLink.style.display=content.video_url?'inline-block':'none';news.innerHTML=(content.news||[]).map(n=>`<article class="card"><span class="pill">${n.tag||'تقرير'}</span><h3>${n.title}</h3><p>${n.text}</p></article>`).join('');socialLinks.innerHTML=Object.entries(content.socials||{}).filter(x=>x[1]).map(([k,v])=>` · <a style="color:#ffe5a0" href="${k==='email'?'mailto:':''}${v}" target="_blank">${k}</a>`).join('')}async function search(){try{let d=await api('/search',{method:'POST',headers:{Authorization:'Bearer '+token},body:JSON.stringify({job_title:job.value,city:city.value,min_experience:+exp.value||0,skills:skills.value.split(',')})});count.textContent=d.total;results.innerHTML=d.candidates.map(c=>`<article class="card candidate"><div class="row"><div><b>${c.full_name}</b><br><span class="muted">${c.job_title||''}</span></div><span class="match">${c.match_percentage||75}% تطابق</span></div><div class="meta">📍 ${c.city||''} · ⏳ ${c.years_of_experience||0} سنوات · 🎓 ${c.education||''}</div><button class="gold" style="margin-top:12px" onclick="unlock('${c.id}')">فتح بيانات التواصل — 1 CV</button></article>`).join('')||'لا توجد نتائج'}catch(e){results.textContent=e.message}}async function unlock(id){try{let d=await api('/unlock',{method:'POST',headers:{Authorization:'Bearer '+token},body:JSON.stringify({candidate_id:id})});if(!d.success)return alert(d.message);credit.textContent=d.new_balance+' CV';alert(`الهاتف: ${d.candidate.phone||'غير متوفر'}\nالبريد: ${d.candidate.email||'غير متوفر'}\nالسيرة: ${d.candidate.resume_url||'غير متوفر'}`)}catch(e){alert(e.message)}}function bank(){let b=content.bank||{};alert(`التحويل البنكي\nالبنك: ${b.name||'يحدد من الإدارة'}\nالحساب: ${b.account_name||''}\nIBAN: ${b.iban||''}\nبعد التحويل تواصل مع الإدارة لتفعيل الرصيد.`)}async function loadAdmin(){try{let d=await api('/admin/stats',{headers:{Authorization:'Bearer '+token}});sc.textContent=d.total_candidates;ss.textContent=d.total_companies;su.textContent=d.total_unlocked;ah.value=content.hero_title||'';at.value=content.hero_text||'';vt.value=content.video_title||'';vx.value=content.video_text||'';vu.value=content.video_url||'';an.value=(content.news||[]).map(n=>`${n.title} | ${n.tag} | ${n.text}`).join('\n');let s=content.socials||{},b=content.bank||{};wa.value=s.whatsapp||'';li.value=s.linkedin||'';ig.value=s.instagram||'';xx.value=s.x||'';em.value=s.email||'';bn.value=b.name||'';ba.value=b.account_name||'';ib.value=b.iban||''}catch(e){alert(e.message);go('home')}}async function saveContent(){let news=an.value.split('\n').filter(Boolean).map(x=>{let a=x.split('|').map(y=>y.trim());return{title:a[0]||'',tag:a[1]||'تقرير',text:a[2]||''}});await save({hero_title:ah.value,hero_text:at.value,video_title:vt.value,video_text:vx.value,video_url:vu.value,news})}async function saveSocial(){await save({socials:{whatsapp:wa.value,linkedin:li.value,instagram:ig.value,x:xx.value,email:em.value},bank:{name:bn.value,account_name:ba.value,iban:ib.value}})}async function save(x){try{content={...content,...x};await api('/cms/content',{method:'POST',headers:{Authorization:'Bearer '+token},body:JSON.stringify(content)});alert('تم الحفظ بنجاح');loadContent()}catch(e){alert(e.message)}}async function clients(){let d=await api('/admin/clients',{headers:{Authorization:'Bearer '+token}});clientTable.innerHTML='<table><tr><th>الشركة</th><th>المسؤول</th><th>البريد</th><th>الرصيد</th></tr>'+d.clients.map(x=>`<tr><td>${x.company_name}</td><td>${x.contact_name}</td><td>${x.email}</td><td>${x.credits_balance}</td></tr>`).join('')+'</table>'}async function requests(){let d=await api('/admin/requests',{headers:{Authorization:'Bearer '+token}});requestTable.innerHTML='<table><tr><th>الحالة</th><th>المبلغ/الرصيد</th><th>التاريخ</th></tr>'+d.requests.map(x=>`<tr><td>${x.status}</td><td>${x.paid_amount||''}</td><td>${new Date(x.created_at).toLocaleDateString()}</td></tr>`).join('')+'</table>'}if(token)api('/me',{headers:{Authorization:'Bearer '+token}}).then(d=>start(d.user)).catch(()=>localStorage.removeItem('rtoken'))</script><script src="/rasheh-polish.js"></script><script src="/rasheh-logo-integration.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رَشّح — منصة التوظيف الذكية</title>
+  <link rel="icon" href="/favicon.ico">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; line-height: 1.6; color: #1f2937; background: #fafafa; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand .rasheh-logo-image { width: 145px; height: 64px; object-fit: contain; }
+    header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 16px 24px; position: sticky; top: 0; z-index: 50; }
+    .container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    nav a { margin-left: 24px; text-decoration: none; color: #374151; font-weight: 500; }
+    nav a:hover { color: #111827; }
+    main { padding: 60px 24px; }
+    .hero { text-align: center; max-width: 800px; margin: 0 auto; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: #111827; margin-bottom: 16px; line-height: 1.2; }
+    .hero p { font-size: 1.25rem; color: #4b5563; margin-bottom: 32px; }
+    .btn { display: inline-block; background: #2563eb; color: #fff; padding: 14px 32px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .btn:hover { background: #1d4ed8; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 60px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; }
+    .card h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 8px; color: #111827; }
+    .card p { color: #6b7280; font-size: 0.95rem; }
+    footer { background: #111827; color: #9ca3af; padding: 40px 24px; text-align: center; margin-top: 80px; }
+    footer a { color: #fff; margin: 0 12px; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand" data-rasheh-logo></div>
+      <nav>
+        <a href="#features">المميزات</a>
+        <a href="/admin.html">لوحة الإدارة</a>
+        <a href="#" id="loginBtn">تسجيل الدخول</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <h1 id="heroTitle">جاري التحميل…</h1>
+      <p id="heroText">جاري التحميل…</p>
+      <a class="btn" href="#contact">ابدأ الآن</a>
+    </section>
+
+    <section class="features" id="features">
+      <div class="card">
+        <h3>مطابقة ذكية</h3>
+        <p>محرك بحث بالخبرة والمهارات والمدينة في ثوانٍ.</p>
+      </div>
+      <div class="card">
+        <h3>حماية البيانات</h3>
+        <p>خصوصية كاملة لبيانات المرشحين والشركات.</p>
+      </div>
+      <div class="card">
+        <h3>تقارير فورية</h3>
+        <p>إحصائيات ولوحة تحكم لحظية لقرارات أسرع.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div id="socials"></div>
+    <p>© 2025 رَشّح. جميع الحقوق محفوظة.</p>
+  </footer>
+
+  <script src="/rasheh-logo-integration.js"></script>
+  <script>
+    async function loadContent() {
+      try {
+        const res = await fetch('/api/cms/content');
+        const { content } = await res.json();
+
+        document.getElementById('heroTitle').textContent = content.hero_title;
+        document.getElementById('heroText').textContent = content.hero_text;
+
+        const socials = document.getElementById('socials');
+        const links = content.socials || {};
+        Object.entries(links).forEach(([key, url]) => {
+          if (url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+            socials.appendChild(a);
+          }
+        });
+      } catch (e) {
+        console.error('Failed to load content:', e);
+      }
+    }
+    loadContent();
+  </script>
+</body>
+</html>
