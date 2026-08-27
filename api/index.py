@@ -87,12 +87,12 @@ class PurchasePayload(BaseModel):
     sender_bank: str = Field(min_length=2, max_length=150)
 
 
-@app.get("/health")
+@app.get("/api/health")
 def health():
     return {"ok": True, "service": "Rasheh Talent", "time": utcnow()}
 
 
-@app.post("/auth/register")
+@app.post("/api/auth/register")
 def register(payload: RegisterPayload):
     try:
         auth_res = admin.auth.admin.create_user({
@@ -117,7 +117,7 @@ def register(payload: RegisterPayload):
         raise HTTPException(status_code=400, detail=msg)
 
 
-@app.post("/auth/login")
+@app.post("/api/auth/login")
 def login(payload: LoginPayload):
     try:
         session = admin.auth.sign_in_with_password({"email": str(payload.email).lower(), "password": payload.password})
@@ -138,14 +138,14 @@ def login(payload: LoginPayload):
         raise HTTPException(status_code=401, detail="البريد أو كلمة المرور غير صحيحة.")
 
 
-@app.get("/me")
+@app.get("/api/me")
 def me(authorization: Optional[str] = Header(None)):
     user = auth_user(authorization)
     profile = profile_for(user.id)
     return {"user": {"company_name": profile["company_name"], "contact_name": profile["contact_name"], "email": profile["email"], "credits_balance": profile["credits_balance"], "is_admin": profile["email"].lower() == ADMIN_EMAIL if ADMIN_EMAIL else False}}
 
 
-@app.post("/match-candidates")
+@app.post("/api/match-candidates")
 def match_candidates(payload: MatchPayload, authorization: Optional[str] = Header(None)):
     user = auth_user(authorization)
     profile = profile_for(user.id)
@@ -184,7 +184,7 @@ def match_candidates(payload: MatchPayload, authorization: Optional[str] = Heade
     return {"total": len(result), "candidates": result[:50]}
 
 
-@app.post("/unlock")
+@app.post("/api/unlock")
 def unlock(payload: UnlockPayload, authorization: Optional[str] = Header(None)):
     user = auth_user(authorization)
     profile = profile_for(user.id)
@@ -205,7 +205,7 @@ def unlock(payload: UnlockPayload, authorization: Optional[str] = Header(None)):
     return {"success": True, "new_balance": balance, "candidate": candidate}
 
 
-@app.post("/purchase")
+@app.post("/api/purchase")
 def purchase(payload: PurchasePayload, authorization: Optional[str] = Header(None)):
     user = auth_user(authorization)
     profile = profile_for(user.id)
@@ -221,7 +221,7 @@ def purchase(payload: PurchasePayload, authorization: Optional[str] = Header(Non
     return {"success": True, "message": f"تم تسجيل طلب تحويل {plan['name']} بقيمة {plan['price']} ريال. لن يضاف الرصيد إلا بعد مراجعة التحويل."}
 
 
-@app.get("/admin/stats")
+@app.get("/api/admin/stats")
 def stats(authorization: Optional[str] = Header(None)):
     user = auth_user(authorization)
     profile = profile_for(user.id)
