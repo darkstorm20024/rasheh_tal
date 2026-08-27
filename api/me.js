@@ -1,1 +1,19 @@
-const {profile,reply,adminOK}=require('./_shared');module.exports=async(req,res)=>{try{const p=await profile(req);reply(res,200,{user:{company_name:p.company_name,contact_name:p.contact_name,email:p.email,credits_balance:p.credits_balance,is_admin:adminOK(p)}})}catch(e){reply(res,401,{detail:e.message})}};
+const { user, profile, reply, errorReply } = require('./_shared');
+
+module.exports = async (req, res) => {
+  try {
+    const currentUser = await user(req);
+    const currentProfile = await profile(req);
+
+    return reply(res, 200, {
+      ok: true,
+      user: {
+        id: currentUser.id,
+        email: currentUser.email
+      },
+      profile: currentProfile
+    });
+  } catch (error) {
+    return errorReply(res, error);
+  }
+};
