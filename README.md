@@ -1,0 +1,1 @@
+Run supabase_cms.sql once, then replace the files in this package. Do not change the current register/login/search/unlock API files, package.json, or environment variables.
