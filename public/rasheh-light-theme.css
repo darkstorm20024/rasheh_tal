@@ -1,0 +1,103 @@
+/* Rasheh Light Theme — add after the existing CSS */
+:root {
+  --b: #f7fafc;
+  --p: #ffffff;
+  --l: #d9e4ee;
+  --g: #d69a12;
+  --m: #526579;
+  --w: #18314d;
+}
+
+body {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8fc 58%, #eef5fa 100%) !important;
+  color: var(--w) !important;
+}
+
+.auth {
+  background: linear-gradient(135deg, #ffffff, #f2f8fc) !important;
+}
+
+.box, .card {
+  background: #ffffff !important;
+  border-color: #d9e4ee !important;
+  box-shadow: 0 10px 30px rgba(25, 57, 92, .07) !important;
+}
+
+input, textarea, select {
+  background: #ffffff !important;
+  color: #18314d !important;
+  border-color: #cad9e6 !important;
+}
+
+.tabs button, .nav button, .adminnav button {
+  background: #eef4f8 !important;
+  color: #3f5872 !important;
+}
+
+.tabs .on, .nav .on {
+  background: linear-gradient(135deg, #ffe985, #d99a12) !important;
+  color: #26394a !important;
+}
+
+.dark {
+  background: #e9f2f8 !important;
+  color: #18314d !important;
+  border: 1px solid #cad9e6 !important;
+}
+
+.hero {
+  background: radial-gradient(circle at 50% 0%, #fff9e7, #f7fbfe 65%) !important;
+}
+
+.trust, .footer, .head {
+  border-color: #dce7ef !important;
+}
+
+.trust, .logos, .footer {
+  color: #526579 !important;
+}
+
+.video {
+  background: linear-gradient(135deg, #edf7fb, #fff8df) !important;
+  border-color: #d5e3ea !important;
+}
+
+.pill, .match {
+  background: #fff8e4 !important;
+  border-color: #ecd392 !important;
+  color: #87600a !important;
+}
+
+.featured {
+  border-color: #e1b238 !important;
+}
+
+.price {
+  color: #b57d08 !important;
+}
+
+.gold {
+  box-shadow: 0 5px 14px rgba(214, 154, 18, .22) !important;
+}
+
+/* رمز رَشّح */
+.brand::before {
+  content: 'ر';
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-left: 8px;
+  vertical-align: middle;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #ffe985, #d99a12);
+  color: #26394a;
+  font-family: Arial, sans-serif;
+  font-size: 21px;
+  font-weight: 900;
+  box-shadow: 0 4px 12px rgba(214, 154, 18, .28);
+}
+
+@media (max-width: 760px) {
+  .brand::before { width: 30px; height: 30px; font-size: 18px; }
+}
