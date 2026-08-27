@@ -43,7 +43,6 @@ function env(name) {
   if (!process.env[name]) {
     throw new Error(`Missing ${name}`);
   }
-
   return process.env[name];
 }
 
@@ -69,7 +68,6 @@ function reply(res, status, body) {
 
 function errorReply(res, error) {
   const status = error instanceof ApiError ? error.status : 500;
-
   return reply(res, status, {
     detail: error?.message || 'حدث خطأ غير متوقع.'
   });
@@ -77,33 +75,23 @@ function errorReply(res, error) {
 
 async function user(req) {
   const token = (req.headers.authorization || '').replace('Bearer ', '').trim();
-
-  if (!token) {
-    throw new ApiError(401, 'يرجى تسجيل الدخول.');
-  }
+  if (!token) throw new ApiError(401, 'يرجى تسجيل الدخول.');
 
   const { data, error } = await anon().auth.getUser(token);
-
-  if (error || !data?.user) {
-    throw new ApiError(401, 'يرجى تسجيل الدخول.');
-  }
+  if (error || !data?.user) throw new ApiError(401, 'يرجى تسجيل الدخول.');
 
   return data.user;
 }
 
 async function profile(req) {
   const currentUser = await user(req);
-
   const { data, error } = await db()
     .from('clients')
     .select('*')
     .eq('auth_user_id', currentUser.id)
     .single();
 
-  if (error || !data) {
-    throw new ApiError(404, 'ملف الشركة غير موجود.');
-  }
-
+  if (error || !data) throw new ApiError(404, 'ملف الشركة غير موجود.');
   return data;
 }
 
