@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رَشّح — منصة التوظيف الذكية</title>
+  <link rel="icon" href="/favicon.png">
+  <link rel="preload" as="image" href="/rasheh-logo.png">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-light: #dbeafe;
+      --primary-hover: #2563eb;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans Arabic", sans-serif; line-height: 1.7; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* Header */
+    header { background: rgba(255,255,255,0.9); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); padding: 16px 0; position: sticky; top: 0; z-index: 50; }
+    .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo img { width: 145px; height: 64px; object-fit: contain; }
+    nav { display: flex; gap: 4px; }
+    nav a { padding: 10px 18px; border-radius: 10px; font-weight: 500; color: var(--text-muted); transition: all 0.2s; font-size: 0.95rem; }
+    nav a:hover { background: var(--primary-light); color: var(--primary); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
+    .btn-primary:hover { background: var(--primary-hover); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--text); }
+    .btn-ghost:hover { background: #f1f5f9; color: var(--primary); }
+
+    /* Hero */
+    .hero { padding: 100px 0 120px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at center, var(--primary-light) 0%, transparent 70%); opacity: 0.5; pointer-events: none; }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(2.25rem, 5.5vw, 4rem); font-weight: 800; line-height: 1.15; color: var(--text); margin-bottom: 24px; max-width: 960px; margin-left: auto; margin-right: auto; letter-spacing: -0.02em; }
+    .hero p { font-size: clamp(1.1rem, 2.2vw, 1.375rem); color: var(--text-muted); margin-bottom: 40px; max-width: 720px; margin-left: auto; margin-right: auto; font-weight: 400; }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* Features */
+    .features { padding: 80px 0; }
+    .features-header { text-align: center; margin-bottom: 56px; }
+    .features-header h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 800; margin-bottom: 16px; letter-spacing: -0.01em; }
+    .features-header p { color: var(--text-muted); font-size: 1.15rem; max-width: 600px; margin: 0 auto; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px 32px; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; }
+    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+    .card-icon { width: 56px; height: 56px; background: var(--primary-light); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--primary); transition: all 0.3s; }
+    .card:hover .card-icon { background: var(--primary); color: #fff; transform: scale(1.05); }
+    .card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.01em; }
+    .card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; }
+
+    /* Stats Bar */
+    .stats-bar { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 60px 0; margin-top: 40px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; text-align: center; }
+    .stat-value { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 8px; background: linear-gradient(135deg, var(--primary), #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
+
+    /* CTA Section */
+    .cta-section { padding: 100px 0; }
+    .cta-card { background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); border-radius: var(--radius); padding: 60px 40px; text-align: center; color: #fff; position: relative; overflow: hidden; }
+    .cta-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 150%; height: 150%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); }
+    .cta-card h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 800; margin-bottom: 12px; position: relative; z-index: 1; }
+    .cta-card p { font-size: 1.15rem; opacity: 0.9; margin-bottom: 28px; max-width: 600px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
+    .cta-card .btn { background: #fff; color: var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .cta-card .btn:hover { background: #f8fafc; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+
+    /* Footer */
+    footer { background: #0f172a; color: #94a3b8; padding: 70px 0 28px; margin-top: 80px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 48px; margin-bottom: 56px; }
+    .footer-brand p { color: #64748b; margin-top: 20px; line-height: 1.8; max-width: 320px; }
+    .footer-col h4 { color: #fff; font-size: 0.85rem; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .footer-col a { display: block; color: #94a3b8; margin-bottom: 12px; transition: color 0.2s; font-size: 0.95rem; }
+    .footer-col a:hover { color: #fff; }
+    .socials { display: flex; gap: 12px; margin-top: 20px; }
+    .socials a { width: 44px; height: 44px; border-radius: 12px; background: #1e293b; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.2s; }
+    .socials a:hover { background: var(--primary); color: #fff; transform: translateY(-2px); }
+    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 28px; text-align: center; font-size: 0.875rem; color: #64748b; }
+
+    /* Video Modal */
+    .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 24px; }
+    .modal.open { opacity: 1; visibility: visible; }
+    .modal-content { background: var(--surface); border-radius: var(--radius); max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; transform: scale(0.95); transition: transform 0.3s; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25); }
+    .modal.open .modal-content { transform: scale(1); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 28px; border-bottom: 1px solid var(--border); }
+    .modal-header h3 { font-size: 1.125rem; font-weight: 700; }
+    .modal-close { background: none; border: none; font-size: 1.75rem; cursor: pointer; color: var(--text-muted); padding: 4px; line-height: 1; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .modal-close:hover { background: #f1f5f9; color: var(--text); }
+    .modal-body { padding: 0; }
+    .video-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+    .video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 28px; right: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 24px; box-shadow: var(--shadow-lg); z-index: 200; transform: translateY(100px); opacity: 0; transition: all 0.3s; display: flex; align-items: center; gap: 12px; min-width: 280px; max-width: 400px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left: 4px solid #22c55e; }
+    .toast.error { border-left: 4px solid #ef4444; }
+    .toast.info { border-left: 4px solid var(--primary); }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="رَشّح - الرئيسية">
+        <img src="/rasheh-logo.png" alt="" width="145" height="64">
+      </a>
+      <nav>
+        <a href="#features">المميزات</a>
+        <a href="#stats">الإحصائيات</a>
+        <a href="/admin.html" class="btn btn-ghost">لوحة الإدارة</a>
+        <a href="#contact" class="btn btn-primary">ابدأ الآن</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-inner">
+        <h1 id="hero-title">جاري التحميل…</h1>
+        <p id="hero-text">جاري التحميل…</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="watchVideoBtn" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            شاهد كيف تعمل
+          </button>
+          <a href="#contact" class="btn btn-ghost">تواصل معنا</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="features-header">
+          <h2 id="features-title">لماذا تختار الشركات منصة رَشّح؟</h2>
+          <p>محرك ذكي يربط أصحاب الشركات بالكفاءات الجاهزة، مع فرز دقيق وحماية كاملة لبيانات المرشحين.</p>
+        </div>
+        <div class="features-grid">
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <h3>مطابقة ذكية فورية</h3>
+            <p>خوارزمية متطورة تبحث بالخبرة، المهارات، والمدينة في ثوانٍ لتقديم أفضل المرشحين المناسبين.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>حماية كاملة للبيانات</h3>
+            <p>خصوصية المرشحين أولوية: البيانات مشفرة، لا تُشارك إلا بموافقة صريحة، ومتوافقة مع معايير الأمان العالمية.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <h3>تقارير ولوحة تحكم لحظية</h3>
+            <p>إحصائيات مباشرة، حالة الطلبات، وتقارير أداء تساعدك على اتخاذ قرارات توظيف أسرع وأذكى.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>فريق دعم مخصص</h3>
+            <p>مدير حساب مختص يساعدك في إعداد المعايير، مراجعة السير، وتحسين عملية التوظيف باستمرار.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-bar" id="stats" aria-labelledby="stats-title">
+      <div class="container">
+        <h2 id="stats-title" class="sr-only">إحصائيات المنصة</h2>
+        <div class="stats-grid">
+          <div><div class="stat-value" id="stat-clients">—</div><div class="stat-label">شركة تثق بنا</div></div>
+          <div><div class="stat-value" id="stat-candidates">—</div><div class="stat-label">مرشح مؤهل</div></div>
+          <div><div class="stat-value" id="stat-placements">—</div><div class="stat-label">تعيين ناجح</div></div>
+          <div><div class="stat-value" id="stat-time">—</div><div class="stat-label">يوم متوسط للتوظيف</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="cta-card">
+          <h2 id="contact-title">جاهز لتوظيف أفضل الكفاءات؟</h2>
+          <p>انضم لآلاف الشركات التي اختصرت وقت التوظيف مع رَشّح. ابدأ مجاناً اليوم.</p>
+          <a href="#signup" class="btn btn-primary" style="padding: 14px 36px; font-size: 1rem;">إنشاء حساب شركة</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo" aria-label="رَشّح - الرئيسية" style="display:inline-flex;margin-bottom:20px;">
+            <img src="/rasheh-logo.png" alt="" width="145" height="64">
+          </a>
+          <p>منصة التوظيف الذكية التي تربط الشركات بالكفاءات الجاهزة بمطابقة دقيقة وحماية كاملة للبيانات.</p>
+          <div class="socials" id="footer-socials"></div>
+        </div>
+        <nav class="footer-col">
+          <h4>الشركة</h4>
+          <a href="#about">من نحن</a>
+          <a href="#careers">فرص عمل</a>
+          <a href="#press">أخبار</a>
+          <a href="#blog">مدونة</a>
+        </nav>
+        <nav class="footer-col">
+          <h4>لأصحاب الشركات</h4>
+          <a href="#pricing">الأسعار</a>
+          <a href="#features">المميزات</a>
+          <a href="#integrations">التكاملات</a>
+          <a href="/admin.html">لوحة الإدارة</a>
+        </nav>
+        <nav class="footer-col">
+          <h4>للمرشحين</h4>
+          <a href="#find-jobs">ابحث عن وظيفة</a>
+          <a href="#profile">أنشئ ملفك</a>
+          <a href="#resources">مصادر مهنية</a>
+          <a href="#help">مساعدة</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 رَشّح. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Video Modal -->
+  <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="video-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="video-title">كيف توفر منصة رَشّح وقت ومصاريف التوظيف؟</h3>
+        <button class="modal-close" id="closeVideoModal" aria-label="إغلاق الفيديو">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="video-wrapper">
+          <iframe id="videoFrame" src="" title="فيديو توضيحي لمنصة رَشّح" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+  <script>
+    // ---- Config & State ----
+    const API_BASE = '/api';
+    let authToken = localStorage.getItem('rasheh_token') || null;
+
+    // ---- Utilities ----
+    function showToast(message, type = 'info') {
+      const el = document.getElementById('toast');
+      el.textContent = message;
+      el.className = 'toast ' + type;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 4000);
+    }
+
+    async function apiFetch(path, options = {}) {
+      const headers = { 'Content-Type': 'application/json', ...options.headers };
+      if (authToken) headers.Authorization = `Bearer ${authToken}`;
+      const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+      if (res.status === 401) {
+        authToken = null;
+        localStorage.removeItem('rasheh_token');
+        if (!window.location.pathname.includes('admin')) return null;
+      }
+      return res;
+    }
+
+    async function apiJson(path, options = {}) {
+      const res = await apiFetch(path, options);
+      if (!res) return null;
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        console.error('API non-JSON response:', path, text.slice(0, 200));
+        throw new Error('استجابة غير صالحة من الخادم');
+      }
+    }
+
+    // ---- Load CMS Content ----
+    async function loadContent() {
+      try {
+        const data = await apiJson('/cms/content');
+        if (!data?.content) return;
+
+        const c = data.content;
+        document.getElementById('hero-title').textContent = c.hero_title || 'وظّف أفضل الكفاءات في ثوانٍ مع منصة رَشّح الذكية';
+        document.getElementById('hero-text').textContent = c.hero_text || 'محرك ذكي يربط أصحاب الشركات بالكفاءات الجاهزة، مع فرز دقيق وحماية كاملة لبيانات المرشحين.';
+
+        // Video
+        const videoUrl = c.video_url;
+        const videoTitle = c.video_title || 'كيف توفر منصة رَشّح وقت ومصاريف التوظيف؟';
+        document.getElementById('video-title').textContent = videoTitle;
+        const watchBtn = document.getElementById('watchVideoBtn');
+        if (videoUrl) {
+          watchBtn.onclick = () => openVideo(videoUrl);
+          watchBtn.style.display = 'inline-flex';
+        } else {
+          watchBtn.style.display = 'none';
+        }
+
+        // Socials
+        const socials = c.socials || {};
+        const footerSocials = document.getElementById('footer-socials');
+        const icons = {
+          whatsapp: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.182.288-.443.304-.606.016-.183-.048-.366-.086-.533-.037-.183-.145-.365-.273-.515-.144-.17-.387-.297-.67-.297-.282 0-.52.085-.702.256-.182.164-.505.58-.804 1.198-.298.617-.446 1.134-.574 1.41-.128.288-.18.311-.242.419-.078.108-.163.205-.249.287a.43.43 0 0 1-.575.082l-1.937-1.22a1.31 1.31 0 0 0-.69-.262c-.333 0-.617.123-.87.359-.26.237-.463.6-.48.887-.006.104.016.206.048.304.033.09.086.188.194.305.09.103.203.22.333.305.145.085.304.163.492.255.203.098.38.15.547.262.164.113.312.182.463.223.149.048.272.048.404-.035.13-.08.243-.2.333-.36.09-.165.208-.424.242-.606a6.798 6.798 0 0 1 .732-.947 6.836 6.836 0 0 1 .817-.967c.475-.53 1.14-1.077 1.65-1.418.508-.34 1.068-.57 1.69-.57.623 0 1.198.23 1.72.672.52.44.89 1.075 1.12 1.67.23.597.303 1.27.216 1.975-.087.708-.32 1.4-.605 2.06-.29.67-.678 1.436-1.11 2.06-.43.62-.95 1.27-1.45 1.88-.5.61-1.12 1.24-1.8 1.84-.68.6-1.45 1.07-2.28 1.41-.82.34-1.6.51-2.4.49-.84-.02-1.65-.18-2.4-.48-.76-.3-1.48-.72-2.13-1.23-.65-.51-1.22-1.13-1.72-1.72z"/></svg>',
+          linkedin: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003zm-.792 22.822h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667h-3.554V9h3.554v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286z"/></svg>',
+          instagram: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
+          x: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 9.24-3.908.963-8.108-8.967-8.713 8.794-3.287-.897 7.825-8.358L.43 2.25h3.306l7.673 8.39 3.454-3.615 3.546 3.958L21.737 2.25z"/></svg>',
+          email: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>'
+        };
+        Object.entries(socials).forEach(([key, url]) => {
+          if (url && icons[key]) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.innerHTML = icons[key];
+            footerSocials.appendChild(a);
+          }
+        });
+      } catch (e) {
+        console.error('Failed to load content:', e);
+      }
+    }
+
+    function openVideo(url) {
+      const modal = document.getElementById('videoModal');
+      const frame = document.getElementById('videoFrame');
+      let embedUrl = url;
+      if (url.includes('youtube.com/watch?v=')) embedUrl = url.replace('watch?v=', 'embed/');
+      else if (url.includes('youtu.be/')) embedUrl = url.replace('youtu.be/', 'youtube.com/embed/');
+      frame.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeVideo() {
+      const modal = document.getElementById('videoModal');
+      const frame = document.getElementById('videoFrame');
+      modal.classList.remove('open');
+      frame.src = '';
+      document.body.style.overflow = '';
+    }
+    document.getElementById('closeVideoModal').onclick = closeVideo;
+    document.getElementById('videoModal').onclick = (e) => { if (e.target === e.currentTarget) closeVideo(); };
+
+    // ---- Load Public Stats ----
+    async function loadPublicStats() {
+      try {
+        const data = await apiJson('/stats/public');
+        if (data?.stats) {
+          document.getElementById('stat-clients').textContent = data.stats.totalClients || '—';
+          document.getElementById('stat-candidates').textContent = data.stats.totalCandidates || '—';
+          document.getElementById('stat-placements').textContent = data.stats.totalPlacements || '—';
+          document.getElementById('stat-time').textContent = data.stats.avgTimeToHire || '—';
+        }
+      } catch (e) {
+        console.error('Failed to load public stats:', e);
+      }
+    }
+
+    // ---- Init ----
+    loadContent();
+    loadPublicStats();
+  </script>
+</body>
+</html>
