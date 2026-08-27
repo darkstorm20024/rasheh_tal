@@ -16,13 +16,13 @@
     if (el.dataset.logoReady === '1') return;
     const label = el.textContent.replace(/RASHEH TALENT/g, '').trim() || 'رَشّح';
     el.dataset.logoReady = '1';
-    el.innerHTML = `
-      <img class="rasheh-logo-image" src="/rasheh-persian-arabic-logo.png" alt="رَشّح">
-      <span class="rasheh-brand-text">
-        <strong>${label}</strong>
-        <small>RASHEH TALENT</small>
-      </span>
-    `;
+   el.innerHTML = `
+  <img
+    class="rasheh-logo-image"
+    src="/rasheh-persian-arabic-logo.png"
+    alt="رَشّح"
+  >
+`;
   }
 
   function install() {
