@@ -1,218 +1,1099 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تصفح المرشحين — رَشّح</title>
-<link rel="icon" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--primary:#3b82f6;--primary-light:#dbeafe;--primary-hover:#2563eb;--bg:#f8fafc;--surface:#ffffff;--text:#0f172a;--text-muted:#64748b;--border:#e2e8f0;--radius:16px;--shadow:0 1px 3px rgba(15,23,42,.06);--shadow-lg:0 10px 25px -5px rgba(15,23,42,.08);--shadow-xl:0 20px 40px -12px rgba(15,23,42,.15)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-header{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:50}
-.header-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
-.logo img{width:130px;height:58px;object-fit:contain}
-.header-right{display:flex;align-items:center;gap:14px}
-.user-email{color:var(--text-muted);font-size:.9rem;font-weight:600}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer;border:none;transition:.2s;font-family:inherit}
-.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(59,130,246,.3)}
-.btn-primary:hover{background:var(--primary-hover)}
-.btn-primary:disabled{opacity:.6;cursor:not-allowed}
-.btn-sm{padding:7px 14px;font-size:.82rem}
-.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
-.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
-.container{max-width:1400px;margin:0 auto;padding:32px 24px}
-.page-title{font-size:1.6rem;font-weight:800;margin-bottom:6px}
-.page-sub{color:var(--text-muted);margin-bottom:28px}
-.filters{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:28px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:12px;align-items:end}
-.form-group{display:flex;flex-direction:column;gap:6px}
-.form-label{font-size:.8rem;font-weight:700;color:var(--text-muted)}
-.form-input{padding:11px 14px;border:1px solid var(--border);border-radius:10px;font-size:.92rem;font-family:inherit;background:var(--bg)}
-.form-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light);background:#fff}
-.candidates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.cand-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);transition:.25s}
-.cand-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.cand-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.cand-avatar{width:52px;height:52px;border-radius:14px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;flex-shrink:0}
-.cand-name{font-weight:800;font-size:1.05rem;margin-bottom:2px}
-.cand-title{color:var(--text-muted);font-size:.85rem}
-.cand-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.meta-chip{background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:.78rem;color:var(--text-muted);font-weight:600}
-.skills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-.skill-tag{background:var(--primary-light);color:var(--primary);font-size:.75rem;font-weight:700;padding:4px 11px;border-radius:999px}
-.cand-actions{display:flex;gap:8px}
-.request-status{font-size:.78rem;font-weight:700;padding:6px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
-.status-pending{background:#fef3c7;color:#92400e}
-.status-in_review{background:#e0e7ff;color:#3730a3}
-.status-approved{background:#dcfce7;color:#166534}
-.status-rejected{background:#fee2e2;color:#991b1b}
-.empty-note{color:var(--text-muted);text-align:center;padding:60px 24px;font-size:.95rem;grid-column:1/-1}
-.locked-screen{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;gap:16px;padding:24px}
-.locked-screen h2{font-size:1.4rem;font-weight:800}
-.locked-screen p{color:var(--text-muted);max-width:420px}
-.toast{position:fixed;bottom:28px;right:28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 22px;box-shadow:var(--shadow-xl);z-index:200;transform:translateY(120px);opacity:0;transition:.4s;min-width:280px;max-width:400px}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.success{border-left:4px solid #22c55e}
-.toast.error{border-left:4px solid #ef4444}
-.toast.info{border-left:4px solid var(--primary)}
-.hidden{display:none!important}
-@media (max-width:900px){.filters{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.filters{grid-template-columns:1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تصفح المرشحين — رَشّح</title>
+
+  <link rel="icon" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-light: #dbeafe;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 14px 30px rgba(15, 23, 42, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Cairo", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    .container {
+      width: min(1280px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Header */
+
+    header {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      display: flex;
+      min-height: 78px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo img {
+      display: block;
+      width: 138px;
+      height: 56px;
+      object-fit: contain;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-email {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 17px;
+      border: 0;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(59,130,246,.24);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-outline {
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 0.78rem;
+    }
+
+    /* Page heading */
+
+    main {
+      padding: 38px 0 80px;
+    }
+
+    .page-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .page-heading h1 {
+      margin: 0 0 5px;
+      font-size: clamp(1.55rem, 3vw, 2.25rem);
+      font-weight: 900;
+    }
+
+    .page-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .credits-box {
+      padding: 10px 15px;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.83rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* Search area */
+
+    .search-panel {
+      margin-bottom: 28px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .search-panel h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 17px;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      align-items: end;
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: 0;
+      background: var(--bg);
+      font-size: 0.87rem;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .search-btn {
+      min-height: 44px;
+      padding-inline: 20px;
+    }
+
+    /* Results */
+
+    .results-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin: 26px 0 16px;
+    }
+
+    .results-head h2 {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 900;
+    }
+
+    .results-count {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .candidate-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 300px;
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: 0.22s;
+    }
+
+    .candidate-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .candidate-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .candidate-identity {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 11px;
+    }
+
+    .candidate-avatar {
+      display: grid;
+      width: 47px;
+      height: 47px;
+      flex: 0 0 47px;
+      border-radius: 14px;
+      place-items: center;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 1.08rem;
+      font-weight: 900;
+    }
+
+    .candidate-name {
+      overflow: hidden;
+      margin: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.98rem;
+      font-weight: 900;
+    }
+
+    .candidate-title {
+      overflow: hidden;
+      margin: 2px 0 0;
+      color: var(--primary);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.79rem;
+      font-weight: 700;
+    }
+
+    /* Match percentage */
+
+    .match-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      min-width: 64px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .match-high {
+      border: 1px solid #bbf7d0;
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .match-medium {
+      border: 1px solid #fde68a;
+      background: #fef3c7;
+      color: #a16207;
+    }
+
+    .match-low {
+      border: 1px solid #fecaca;
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .candidate-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 17px 0 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--bg);
+    }
+
+    .info-item {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .skills-title {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.71rem;
+      font-weight: 800;
+    }
+
+    .matched-skill {
+      border: 1px solid #86efac;
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .candidate-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    .score-note {
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #a16207;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 52px 20px;
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 7px;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    .locked {
+      display: flex;
+      min-height: 70vh;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .locked-card {
+      max-width: 450px;
+      padding: 35px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .locked-card h1 {
+      margin: 0 0 10px;
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .locked-card p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 100;
+      right: 20px;
+      bottom: 20px;
+      min-width: 260px;
+      max-width: 400px;
+      padding: 13px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.84rem;
+      opacity: 0;
+      transform: translateY(120px);
+      transition: 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      border-right: 4px solid #22c55e;
+    }
+
+    .toast.error {
+      border-right: 4px solid #ef4444;
+    }
+
+    .toast.info {
+      border-right: 4px solid var(--primary);
+    }
+
+    @media (max-width: 1050px) {
+      .search-form {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .search-btn {
+        grid-column: span 2;
+      }
+
+      .candidates-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        width: min(100% - 28px, 1280px);
+      }
+
+      .header-inner {
+        min-height: 70px;
+      }
+
+      .logo img {
+        width: 110px;
+      }
+
+      .user-email {
+        display: none;
+      }
+
+      .header-actions {
+        gap: 5px;
+      }
+
+      .header-actions .btn-small {
+        padding: 8px 9px;
+        font-size: 0.72rem;
+      }
+
+      .page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .search-form,
+      .candidates-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-btn {
+        grid-column: auto;
+      }
+
+      .candidate-info {
+        grid-template-columns: 1fr;
+      }
+
+      .candidate-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .candidate-footer .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="رَشّح">
+        <img
+          src="/rasheh-logo.png"
+          alt="رَشّح"
+          onerror="this.style.display='none';this.parentElement.textContent='رَشّح';"
+        >
+      </a>
 
-<header>
-<div class="header-inner">
-<a href="/" class="logo"><img src="/rasheh-logo.png" alt="رَشّح"></a>
-<div class="header-right">
-<span class="user-email" id="userEmail"></span>
-<a href="/billing.html" class="btn btn-outline btn-sm">حسابي والباقات</a>
-<a href="/" class="btn btn-outline btn-sm">الرئيسية</a>
-<button class="btn btn-outline btn-sm" id="logoutBtn">خروج</button>
-</div>
-</div>
-</header>
+      <div class="header-actions">
+        <span class="user-email" id="userEmail"></span>
 
-<div class="container hidden" id="lockedScreen" style="display:none">
-<div class="locked-screen">
-<h2>هذه الصفحة مخصصة للشركات المسجّلة</h2>
-<p>يرجى تسجيل الدخول بحساب شركة لتصفح المرشحين وإرسال طلبات السير الذاتية.</p>
-<a href="/" class="btn btn-primary">الذهاب لتسجيل الدخول</a>
-</div>
-</div>
+        <a href="/billing.html" class="btn btn-outline btn-small">
+          الباقات
+        </a>
 
-<main class="container hidden" id="mainContent">
-<h1 class="page-title">تصفح المرشحين المناسبين</h1>
-<p class="page-sub">استخدم الفلاتر أدناه للعثور على أفضل الكفاءات المطابقة لاحتياجك</p>
+        <a href="/" class="btn btn-outline btn-small">
+          الرئيسية
+        </a>
 
-<div class="filters">
-<div class="form-group"><label class="form-label">بحث بالاسم أو المسمى الوظيفي</label><input type="text" class="form-input" id="f-q" placeholder="مثال: مطور برمجيات"></div>
-<div class="form-group"><label class="form-label">المدينة</label><input type="text" class="form-input" id="f-city" placeholder="الرياض"></div>
-<div class="form-group"><label class="form-label">مهارة محددة</label><input type="text" class="form-input" id="f-skill" placeholder="مثال: Python"></div>
-<div class="form-group"><label class="form-label">أقل سنوات خبرة</label><input type="number" class="form-input" id="f-exp" min="0" placeholder="0"></div>
-<button class="btn btn-primary" id="searchBtn">بحث</button>
-</div>
-
-<div class="candidates-grid" id="candidatesGrid">
-<p class="empty-note">جاري تحميل المرشحين...</p>
-</div>
-</main>
-
-<div class="toast" id="toast" role="alert"></div>
-
-<script>
-const API='/api';
-let token=localStorage.getItem('rasheh_token')||null;
-let myRequests={};
-
-function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>t.classList.remove('show'),4000)}
-
-async function api(path,opts={}){
-  const headers={'Content-Type':'application/json',...opts.headers};
-  if(token) headers.Authorization='Bearer '+token;
-  const res=await fetch(API+path,{...opts,headers});
-  const text=await res.text();
-  let data;
-  try{data=JSON.parse(text)}catch(e){console.error('non-json',path,text.slice(0,150));return {status:res.status}}
-  data.__status=res.status;
-  return data;
-}
-
-document.getElementById('logoutBtn').addEventListener('click',()=>{
-  token=null;localStorage.removeItem('rasheh_token');window.location.href='/';
-});
-
-async function init(){
-  if(!token){ document.getElementById('lockedScreen').style.display='block'; return; }
-  const me=await api('/me');
-  if(!me?.user || me.__status===401){ document.getElementById('lockedScreen').style.display='block'; return; }
-  if(me.profile?.is_admin){
-    toast('حساب الإدارة لا يستخدم صفحة تصفح المرشحين','info');
-    document.getElementById('lockedScreen').style.display='block';
-    return;
-  }
-  if(!me.profile){ document.getElementById('lockedScreen').style.display='block'; return; }
-
-  document.getElementById('userEmail').textContent=me.user.email;
-  document.getElementById('mainContent').classList.remove('hidden');
-  await loadMyRequests();
-  await loadCandidates();
-}
-
-async function loadMyRequests(){
-  const data=await api('/public?resource=my-requests');
-  myRequests={};
-  (data?.requests||[]).forEach(r=>{ myRequests[r.candidate_id]=r.status });
-}
-
-function statusLabel(s){
-  return {pending:'قيد الانتظار',in_review:'قيد المراجعة',approved:'مقبول',rejected:'مرفوض'}[s]||s;
-}
-
-async function loadCandidates(){
-  const grid=document.getElementById('candidatesGrid');
-  grid.innerHTML='<p class="empty-note">جاري التحميل...</p>';
-  const q=document.getElementById('f-q').value.trim();
-  const city=document.getElementById('f-city').value.trim();
-  const skill=document.getElementById('f-skill').value.trim();
-  const exp=document.getElementById('f-exp').value.trim();
-  const params=new URLSearchParams({resource:'candidates'});
-  if(q) params.set('q',q);
-  if(city) params.set('city',city);
-  if(skill) params.set('skill',skill);
-  if(exp) params.set('min_experience',exp);
-
-  const data=await api('/public?'+params.toString());
-  if(!data?.candidates?.length){
-    grid.innerHTML='<p class="empty-note">لا يوجد مرشحون مطابقون لبحثك حالياً</p>';
-    return;
-  }
-
-  grid.innerHTML=data.candidates.map(c=>{
-    const status=myRequests[c.id];
-    const actionHtml=status
-      ? `<span class="request-status status-${status}">${statusLabel(status)}</span>`
-      : `<button class="btn btn-primary btn-sm" onclick="requestCandidate('${c.id}')">طلب السيرة الذاتية</button>`;
-    const skillsHtml=(c.skills||[]).slice(0,5).map(s=>`<span class="skill-tag">${s}</span>`).join('');
-    return `
-      <div class="cand-card">
-        <div class="cand-head">
-          <div class="cand-avatar">${(c.full_name||'?').charAt(0)}</div>
-          <div><div class="cand-name">${c.full_name}</div><div class="cand-title">${c.current_title||'—'}</div></div>
-        </div>
-        <div class="cand-meta">
-          <span class="meta-chip">📍 ${c.city||'غير محدد'}</span>
-          <span class="meta-chip">💼 ${c.experience_years||0} سنة خبرة</span>
-        </div>
-        <div class="skills">${skillsHtml}</div>
-        <div class="cand-actions">${actionHtml}</div>
+        <button class="btn btn-outline btn-small" id="logoutBtn" type="button">
+          خروج
+        </button>
       </div>
-    `;
-  }).join('');
-}
+    </div>
+  </header>
 
-window.requestCandidate=async function(candidateId){
-  const data=await api('/public?resource=request-candidate',{method:'POST',body:JSON.stringify({candidate_id:candidateId})});
-  if(data?.ok){
-    toast(data.detail||'تم إرسال الطلب بنجاح','success');
-    myRequests[candidateId]=data.request?.status||'pending';
-    loadCandidates();
-  }else{
-    toast(data?.detail||'فشل إرسال الطلب','error');
-  }
-};
+  <div class="locked hidden" id="lockedView">
+    <div class="locked-card">
+      <h1>صفحة المرشحين مخصصة للشركات</h1>
+      <p>
+        يجب تسجيل الدخول بحساب شركة لتتمكن من البحث عن المرشحين
+        وإرسال طلبات السيرة الذاتية.
+      </p>
+      <a class="btn btn-primary" href="/">
+        الذهاب لتسجيل الدخول
+      </a>
+    </div>
+  </div>
 
-document.getElementById('searchBtn').addEventListener('click',loadCandidates);
-['f-q','f-city','f-skill','f-exp'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown',(e)=>{ if(e.key==='Enter') loadCandidates(); });
-});
+  <main class="container hidden" id="appView">
+    <div class="page-heading">
+      <div>
+        <h1>تصفح المرشحين المناسبين</h1>
+        <p>ابحث بالعربية أو الإنجليزية، وشاهد نسبة التوافق لكل مرشح.</p>
+      </div>
 
-init();
-</script>
+      <div class="credits-box">
+        رصيدك: <span id="creditsValue">0</span> طلب
+      </div>
+    </div>
+
+    <section class="search-panel">
+      <h2>⌕ البحث الذكي عن المرشحين</h2>
+
+      <form class="search-form" id="searchForm">
+        <div class="field">
+          <label for="jobTitleInput">المسمى الوظيفي أو التخصص</label>
+          <input
+            id="jobTitleInput"
+            type="text"
+            required
+            placeholder="مثال: محاسب أو accountant أو React developer"
+          >
+        </div>
+
+        <div class="field">
+          <label for="cityInput">المدينة (اختياري)</label>
+          <input
+            id="cityInput"
+            type="text"
+            placeholder="مثال: الرياض"
+          >
+        </div>
+
+        <div class="field">
+          <label for="skillsInput">المهارات (اختياري)</label>
+          <input
+            id="skillsInput"
+            type="text"
+            placeholder="Excel, ERP أو React, JavaScript"
+          >
+        </div>
+
+        <div class="field">
+          <label for="experienceInput">أقل سنوات خبرة</label>
+          <input
+            id="experienceInput"
+            type="number"
+            min="0"
+            value="0"
+            placeholder="0"
+          >
+        </div>
+
+        <button class="btn btn-primary search-btn" id="searchBtn" type="submit">
+          بحث
+        </button>
+      </form>
+    </section>
+
+    <div class="results-head">
+      <h2>نتائج المطابقة</h2>
+      <span class="results-count" id="resultsCount">
+        ابدأ البحث لعرض المرشحين
+      </span>
+    </div>
+
+    <section class="candidates-grid" id="candidatesGrid">
+      <div class="empty-state">
+        <h3>ابحث عن الموظف المناسب</h3>
+        <p>اكتب المسمى الوظيفي بالعربية أو الإنجليزية ثم اضغط بحث.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const API = "/api";
+      let token = localStorage.getItem("rasheh_token") || null;
+      let requestedCandidates = {};
+
+      const get = (id) => document.getElementById(id);
+
+      function showToast(message, type = "info") {
+        const toast = get("toast");
+        toast.textContent = message;
+        toast.className = "toast " + type + " show";
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 4200);
+      }
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      async function api(path, options = {}) {
+        const headers = {
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        };
+
+        if (token) {
+          headers.Authorization = "Bearer " + token;
+        }
+
+        const response = await fetch(API + path, {
+          method: options.method || "GET",
+          headers,
+          body: options.body || undefined
+        });
+
+        const raw = await response.text();
+
+        let data;
+
+        try {
+          data = JSON.parse(raw);
+        } catch (error) {
+          data = {
+            detail: "استجابة غير صالحة من الخادم."
+          };
+        }
+
+        data.__status = response.status;
+
+        return data;
+      }
+
+      function getMatchClass(percentage) {
+        const value = Number(percentage || 0);
+
+        if (value >= 80) {
+          return "match-high";
+        }
+
+        if (value >= 60) {
+          return "match-medium";
+        }
+
+        return "match-low";
+      }
+
+      function requestStatusText(status) {
+        const labels = {
+          pending: "طلبك قيد الانتظار",
+          in_review: "طلبك قيد المراجعة",
+          approved: "تمت الموافقة",
+          rejected: "تم الرفض"
+        };
+
+        return labels[status] || "تم إرسال الطلب";
+      }
+
+      function renderCandidates(candidates) {
+        const grid = get("candidatesGrid");
+
+        if (!candidates || !candidates.length) {
+          grid.innerHTML = `
+            <div class="empty-state">
+              <h3>لا توجد نتائج مطابقة</h3>
+              <p>
+                جرّب تغيير المسمى الوظيفي أو خفف شروط المدينة
+                والخبرة والمهارات.
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = candidates.map((candidate) => {
+          const fullName = candidate.full_name || "مرشح";
+          const jobTitle = candidate.job_title || "مسمى وظيفي غير محدد";
+          const match = Number(candidate.match_percentage || 0);
+          const matchClass = getMatchClass(match);
+          const initials = fullName.charAt(0);
+          const candidateId = candidate.candidate_id;
+
+          const skills = Array.isArray(candidate.skills)
+            ? candidate.skills
+            : [];
+
+          const matchedSkills = Array.isArray(candidate.matched_skills)
+            ? candidate.matched_skills.map((skill) => String(skill).toLowerCase())
+            : [];
+
+          const skillsHtml = skills.length
+            ? skills.slice(0, 8).map((skill) => {
+                const isMatched = matchedSkills.includes(String(skill).toLowerCase());
+                return `
+                  <span class="skill ${isMatched ? "matched-skill" : ""}">
+                    ${escapeHtml(skill)}
+                  </span>
+                `;
+              }).join("")
+            : `<span class="skill">لا توجد مهارات مسجلة</span>`;
+
+          const existingStatus = requestedCandidates[candidateId];
+
+          const actionHtml = existingStatus
+            ? `
+                <span class="status-badge">
+                  ${escapeHtml(requestStatusText(existingStatus))}
+                </span>
+              `
+            : `
+                <button
+                  class="btn btn-primary btn-small"
+                  type="button"
+                  onclick="window.requestCandidate('${candidateId}')"
+                >
+                  طلب السيرة الذاتية
+                </button>
+              `;
+
+          const breakdown = candidate.match_breakdown || {};
+
+          return `
+            <article class="candidate-card">
+              <div class="candidate-top">
+                <div class="candidate-identity">
+                  <div class="candidate-avatar">
+                    ${escapeHtml(initials)}
+                  </div>
+
+                  <div style="min-width:0">
+                    <h3 class="candidate-name">
+                      ${escapeHtml(fullName)}
+                    </h3>
+
+                    <p class="candidate-title">
+                      ${escapeHtml(jobTitle)}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="match-badge ${matchClass}">
+                  توافق ${match}%
+                </div>
+              </div>
+
+              <div class="candidate-info">
+                <div class="info-item">
+                  📍 ${escapeHtml(candidate.city || "المدينة غير محددة")}
+                </div>
+
+                <div class="info-item">
+                  💼 ${Number(candidate.years_of_experience || 0)} سنة خبرة
+                </div>
+
+                <div class="info-item">
+                  🎓 ${escapeHtml(candidate.education || "التعليم غير محدد")}
+                </div>
+
+                <div class="info-item">
+                  ${candidate.work_type ? "🕒 " + escapeHtml(candidate.work_type) : "🕒 نوع العمل غير محدد"}
+                </div>
+              </div>
+
+              <p class="skills-title">المهارات</p>
+
+              <div class="skills">
+                ${skillsHtml}
+              </div>
+
+              <div class="candidate-footer">
+                <span class="score-note">
+                  وظيفة: ${Number(breakdown.job || 0)} /
+                  مهارات: ${Number(breakdown.skills || 0)} /
+                  خبرة: ${Number(breakdown.experience || 0)} /
+                  مدينة: ${Number(breakdown.city || 0)}
+                </span>
+
+                ${actionHtml}
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      async function loadMyRequests() {
+        const data = await api("/public?resource=my-requests");
+
+        requestedCandidates = {};
+
+        if (!data || !Array.isArray(data.requests)) {
+          return;
+        }
+
+        data.requests.forEach((request) => {
+          requestedCandidates[request.candidate_id] = request.status;
+        });
+      }
+
+      async function searchCandidates() {
+        const jobTitle = get("jobTitleInput").value.trim();
+        const city = get("cityInput").value.trim();
+        const skills = get("skillsInput").value.trim();
+        const minExperience = get("experienceInput").value.trim();
+
+        if (!jobTitle) {
+          showToast("اكتب المسمى الوظيفي أولاً.", "error");
+          return;
+        }
+
+        const button = get("searchBtn");
+        const grid = get("candidatesGrid");
+
+        button.disabled = true;
+        button.textContent = "جاري البحث...";
+
+        grid.innerHTML = `
+          <div class="empty-state">
+            <h3>جاري تحليل المرشحين...</h3>
+            <p>نقارن المسمى الوظيفي والمهارات والخبرة والمدينة.</p>
+          </div>
+        `;
+
+        try {
+          const params = new URLSearchParams();
+
+          params.set("resource", "candidates");
+          params.set("q", jobTitle);
+
+          if (city) {
+            params.set("city", city);
+          }
+
+          if (skills) {
+            params.set("skill", skills);
+          }
+
+          if (minExperience) {
+            params.set("min_experience", minExperience);
+          }
+
+          const data = await api(
+            "/public?" + params.toString()
+          );
+
+          if (!data || !data.ok) {
+            get("resultsCount").textContent = "فشل البحث";
+
+            grid.innerHTML = `
+              <div class="empty-state">
+                <h3>تعذر تنفيذ البحث</h3>
+                <p>${escapeHtml(data?.detail || "تحقق من تسجيل الدخول ومن إعدادات الخادم.")}</p>
+              </div>
+            `;
+
+            return;
+          }
+
+          const count = Number(data.total || 0);
+
+          get("creditsValue").textContent =
+            Number(data.client_credits || 0);
+
+          get("resultsCount").textContent =
+            `تم العثور على ${count} مرشح مناسب`;
+
+          renderCandidates(data.candidates || []);
+        } catch (error) {
+          get("resultsCount").textContent = "فشل البحث";
+
+          grid.innerHTML = `
+            <div class="empty-state">
+              <h3>تعذر الاتصال بالخادم</h3>
+              <p>تأكد من أن الموقع تم نشره وأنك سجلت الدخول بحساب شركة.</p>
+            </div>
+          `;
+        } finally {
+          button.disabled = false;
+          button.textContent = "بحث";
+        }
+      }
+
+      window.requestCandidate = async function (candidateId) {
+        try {
+          const data = await api(
+            "/public?resource=request-candidate",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                candidate_id: candidateId
+              })
+            }
+          );
+
+          if (!data || !data.ok) {
+            showToast(
+              data?.detail || "فشل إرسال طلب السيرة الذاتية.",
+              "error"
+            );
+            return;
+          }
+
+          requestedCandidates[candidateId] =
+            data.request?.status || "pending";
+
+          showToast(
+            data.detail || "تم إرسال طلب السيرة الذاتية بنجاح.",
+            "success"
+          );
+
+          searchCandidates();
+        } catch (error) {
+          showToast(
+            "تعذر إرسال الطلب. حاول مرة أخرى.",
+            "error"
+          );
+        }
+      };
+
+      get("searchForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        searchCandidates();
+      });
+
+      get("logoutBtn").addEventListener("click", function () {
+        token = null;
+        localStorage.removeItem("rasheh_token");
+        window.location.href = "/";
+      });
+
+      async function init() {
+        if (!token) {
+          get("lockedView").classList.remove("hidden");
+          return;
+        }
+
+        try {
+          const userData = await api("/me");
+
+          if (
+            !userData ||
+            !userData.user ||
+            userData.__status === 401 ||
+            !userData.profile ||
+            userData.profile.is_admin
+          ) {
+            get("lockedView").classList.remove("hidden");
+            return;
+          }
+
+          get("userEmail").textContent = userData.user.email;
+          get("appView").classList.remove("hidden");
+
+          await loadMyRequests();
+        } catch (error) {
+          get("lockedView").classList.remove("hidden");
+        }
+      }
+
+      init();
+    })();
+  </script>
 </body>
 </html>
