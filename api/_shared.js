@@ -2,6 +2,28 @@ const { createClient } = require('@supabase/supabase-js');
 
 const ADMIN_EMAIL = 'admin@rasheh.com';
 
+const defaults = {
+  hero_title: 'وظّف أفضل الكفاءات في ثوانٍ مع منصة رَشّح الذكية',
+  hero_text:
+    'محرك ذكي يربط أصحاب الشركات بالكفاءات الجاهزة، مع فرز دقيق وحماية كاملة لبيانات المرشحين.',
+  video_url: '',
+  video_title: '',
+  video_text: '',
+  socials: {
+    whatsapp: '',
+    linkedin: '',
+    instagram: '',
+    x: '',
+    email: ''
+  },
+  bank: {
+    name: '',
+    account_name: '',
+    iban: ''
+  },
+  news: []
+};
+
 class ApiError extends Error {
   constructor(status, detail) {
     super(detail);
@@ -50,7 +72,9 @@ function reply(res, status, body) {
 function errorReply(res, error) {
   console.error('API Error:', error);
 
-  const status = error instanceof ApiError ? error.status : 500;
+  const status = error instanceof ApiError
+    ? error.status
+    : 500;
 
   return reply(res, status, {
     detail: error?.message || 'حدث خطأ غير متوقع.'
@@ -66,10 +90,15 @@ async function user(req) {
     throw new ApiError(401, 'يرجى تسجيل الدخول أولاً.');
   }
 
-  const { data, error } = await anon().auth.getUser(token);
+  const { data, error } = await anon()
+    .auth
+    .getUser(token);
 
   if (error || !data?.user) {
-    throw new ApiError(401, 'جلسة الدخول غير صالحة. سجّل الدخول مرة أخرى.');
+    throw new ApiError(
+      401,
+      'جلسة الدخول غير صالحة. سجّل الدخول مرة أخرى.'
+    );
   }
 
   return data.user;
@@ -93,9 +122,15 @@ async function requireClient(req) {
   }
 
   /*
-    هذه هي أعمدة clients الحقيقية عندك:
-    id / company_name / contact_name / email / phone /
-    credeits_balance / created_at / auth_user_id
+    جدول clients الحقيقي عندك:
+    id
+    company_name
+    contact_name
+    email
+    phone
+    credits_balance
+    created_at
+    auth_user_id
   */
   const { data: client, error } = await db()
     .from('clients')
@@ -105,7 +140,7 @@ async function requireClient(req) {
       contact_name,
       email,
       phone,
-      credeits_balance,
+      credits_balance,
       created_at,
       auth_user_id
     `)
@@ -136,28 +171,6 @@ function readBody(req) {
     return {};
   }
 }
-
-const defaults = {
-  hero_title: 'وظّف أفضل الكفاءات في ثوانٍ مع منصة رَشّح الذكية',
-  hero_text:
-    'محرك ذكي يربط أصحاب الشركات بالكفاءات الجاهزة، مع فرز دقيق وحماية كاملة لبيانات المرشحين.',
-  video_url: '',
-  video_title: '',
-  video_text: '',
-  socials: {
-    whatsapp: '',
-    linkedin: '',
-    instagram: '',
-    x: '',
-    email: ''
-  },
-  bank: {
-    name: '',
-    account_name: '',
-    iban: ''
-  },
-  news: []
-};
 
 module.exports = {
   db,
