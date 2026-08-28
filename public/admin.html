@@ -12,7 +12,6 @@
 :root{--primary:#3b82f6;--primary-light:#dbeafe;--primary-hover:#2563eb;--bg:#f8fafc;--surface:#ffffff;--text:#0f172a;--text-muted:#64748b;--border:#e2e8f0;--radius:16px;--shadow:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);--shadow-lg:0 10px 25px -5px rgba(15,23,42,.08);--shadow-xl:0 20px 40px -12px rgba(15,23,42,.15)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Cairo',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden}
 a{color:inherit;text-decoration:none}
 header{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:50}
 .header-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
@@ -24,6 +23,8 @@ header{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom
 .btn-primary:hover{background:var(--primary-hover)}
 .btn-danger{background:#fef2f2;color:#dc2626}
 .btn-danger:hover{background:#fee2e2}
+.btn-success{background:#f0fdf4;color:#16a34a}
+.btn-success:hover{background:#dcfce7}
 .btn-sm{padding:7px 14px;font-size:.82rem}
 .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
 .btn-outline:hover{border-color:var(--primary);color:var(--primary)}
@@ -54,8 +55,8 @@ tr:last-child td{border-bottom:none}
 tr:hover td{background:#f8fafc}
 .badge{display:inline-flex;padding:5px 12px;border-radius:999px;font-size:.72rem;font-weight:700}
 .badge-pending{background:#fef3c7;color:#92400e}
-.badge-approved{background:#dcfce7;color:#166534}
-.badge-rejected{background:#fee2e2;color:#991b1b}
+.badge-approved,.badge-completed,.badge-active{background:#dcfce7;color:#166534}
+.badge-rejected,.badge-failed{background:#fee2e2;color:#991b1b}
 .badge-in_review{background:#e0e7ff;color:#3730a3}
 .badge-published{background:#dcfce7;color:#166534}
 .badge-draft{background:#f1f5f9;color:#475569}
@@ -76,6 +77,9 @@ tr:hover td{background:#f8fafc}
 .list-item-content{flex:1}
 .list-item-title{font-weight:700;margin-bottom:4px}
 .list-item-sub{color:var(--text-muted);font-size:.85rem}
+.plans-admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plan-edit-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.plan-edit-card h4{font-weight:800;margin-bottom:14px;font-size:1rem}
 .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(180deg,var(--bg),#fff)}
 .login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:48px 40px;width:100%;max-width:420px;box-shadow:var(--shadow-xl)}
 .login-logo{display:flex;justify-content:center;margin-bottom:32px}
@@ -92,7 +96,7 @@ tr:hover td{background:#f8fafc}
 .toast.error{border-left:4px solid #ef4444}
 .toast.info{border-left:4px solid var(--primary)}
 .empty-note{color:var(--text-muted);text-align:center;padding:24px;font-size:.9rem}
-@media (max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:768px){.form-row,.form-row-3,.plans-admin-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -124,445 +128,19 @@ tr:hover td{background:#f8fafc}
 
 <main class="container hidden" id="dashboardContent">
 <h1 class="page-title">لوحة الإدارة</h1>
-<p class="page-sub">تحكم كامل في محتوى المنصة، المقالات، الآراء، والطلبات</p>
+<p class="page-sub">تحكم كامل في محتوى المنصة، المقالات، الآراء، الباقات، والطلبات</p>
 
 <div class="tabs">
 <button class="tab active" data-tab="overview">نظرة عامة</button>
 <button class="tab" data-tab="content">محتوى الصفحة الرئيسية</button>
+<button class="tab" data-tab="plans">الباقات والدفعات</button>
 <button class="tab" data-tab="articles">المقالات</button>
 <button class="tab" data-tab="testimonials">آراء العملاء</button>
 <button class="tab" data-tab="requests">طلبات الشركات</button>
 </div>
 
-<!-- Overview -->
 <section class="tab-panel active" id="panel-overview">
 <div class="stats-grid">
 <div class="stat-card"><div class="stat-label">إجمالي الشركات</div><div class="stat-value primary" id="s-clients">—</div></div>
 <div class="stat-card"><div class="stat-label">إجمالي المرشحين</div><div class="stat-value" id="s-candidates">—</div></div>
-<div class="stat-card"><div class="stat-label">طلبات قيد المراجعة</div><div class="stat-value warning" id="s-pending">—</div></div>
-<div class="stat-card"><div class="stat-label">تعيينات ناجحة</div><div class="stat-value success" id="s-placements">—</div></div>
-<div class="stat-card"><div class="stat-label">مقالات منشورة</div><div class="stat-value" id="s-articles">—</div></div>
-<div class="stat-card"><div class="stat-label">آراء منشورة</div><div class="stat-value" id="s-testimonials">—</div></div>
-</div>
-</section>
-
-<!-- CMS Content -->
-<section class="tab-panel" id="panel-content">
-<div class="card-box">
-<div class="section-title">النص الرئيسي (Hero)</div>
-<div class="form-group"><label class="form-label">العنوان الرئيسي</label><textarea class="form-textarea" id="cms-hero-title" rows="2"></textarea></div>
-<div class="form-group"><label class="form-label">النص الفرعي</label><textarea class="form-textarea" id="cms-hero-text" rows="2"></textarea></div>
-</div>
-
-<div class="card-box">
-<div class="section-title">الفيديو التوضيحي</div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">رابط الفيديو (YouTube)</label><input type="url" class="form-input" id="cms-video-url" placeholder="https://youtube.com/watch?v=..."></div>
-<div class="form-group"><label class="form-label">عنوان الفيديو</label><input type="text" class="form-input" id="cms-video-title"></div>
-</div>
-</div>
-
-<div class="card-box">
-<div class="section-title">روابط السوشيال ميديا</div>
-<div class="form-row-3">
-<div class="form-group"><label class="form-label">واتساب</label><input type="text" class="form-input" id="soc-whatsapp" placeholder="https://wa.me/9665..."></div>
-<div class="form-group"><label class="form-label">لينكدإن</label><input type="url" class="form-input" id="soc-linkedin" placeholder="https://linkedin.com/company/..."></div>
-<div class="form-group"><label class="form-label">إنستغرام</label><input type="url" class="form-input" id="soc-instagram" placeholder="https://instagram.com/..."></div>
-</div>
-<div class="form-row-3">
-<div class="form-group"><label class="form-label">اكس (X)</label><input type="url" class="form-input" id="soc-x" placeholder="https://x.com/..."></div>
-<div class="form-group"><label class="form-label">البريد الإلكتروني</label><input type="email" class="form-input" id="soc-email" placeholder="info@rasheh.com"></div>
-<div></div>
-</div>
-</div>
-
-<div class="card-box">
-<div class="section-title">بيانات الحساب البنكي</div>
-<div class="form-row-3">
-<div class="form-group"><label class="form-label">اسم البنك</label><input type="text" class="form-input" id="bank-name"></div>
-<div class="form-group"><label class="form-label">اسم صاحب الحساب</label><input type="text" class="form-input" id="bank-account-name"></div>
-<div class="form-group"><label class="form-label">رقم الآيبان</label><input type="text" class="form-input" id="bank-iban"></div>
-</div>
-</div>
-
-<button class="btn btn-primary" id="saveCmsBtn">حفظ جميع التغييرات</button>
-</section>
-
-<!-- Articles -->
-<section class="tab-panel" id="panel-articles">
-<div class="card-box">
-<div class="section-title">
-<span>إضافة / تعديل مقال</span>
-<button class="btn btn-outline btn-sm" id="clearArticleFormBtn">مقال جديد</button>
-</div>
-<input type="hidden" id="article-id">
-<div class="form-group"><label class="form-label">العنوان</label><input type="text" class="form-input" id="article-title" required></div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">الوسم / التصنيف</label><input type="text" class="form-input" id="article-tag" placeholder="دليل الشركات"></div>
-<div class="form-group"><label class="form-label">رابط صورة الغلاف</label><input type="url" class="form-input" id="article-cover"></div>
-</div>
-<div class="form-group"><label class="form-label">مقتطف قصير</label><textarea class="form-textarea" id="article-excerpt" rows="2"></textarea></div>
-<div class="form-group"><label class="form-label">المحتوى الكامل</label><textarea class="form-textarea" id="article-content" rows="6"></textarea></div>
-<div class="checkbox-row"><input type="checkbox" id="article-published"><label for="article-published">نشر المقال الآن</label></div>
-<button class="btn btn-primary" id="saveArticleBtn">حفظ المقال</button>
-</div>
-
-<div class="section-title">المقالات الحالية</div>
-<div id="articlesList"></div>
-</section>
-
-<!-- Testimonials -->
-<section class="tab-panel" id="panel-testimonials">
-<div class="card-box">
-<div class="section-title">
-<span>إضافة / تعديل رأي</span>
-<button class="btn btn-outline btn-sm" id="clearTestiFormBtn">رأي جديد</button>
-</div>
-<input type="hidden" id="testi-id">
-<div class="form-row">
-<div class="form-group"><label class="form-label">اسم الكاتب</label><input type="text" class="form-input" id="testi-name" required></div>
-<div class="form-group"><label class="form-label">المنصب</label><input type="text" class="form-input" id="testi-role" placeholder="مدير الموارد البشرية"></div>
-</div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">اسم الشركة</label><input type="text" class="form-input" id="testi-company"></div>
-<div class="form-group"><label class="form-label">التقييم (1-5)</label><input type="number" class="form-input" id="testi-rating" min="1" max="5" value="5"></div>
-</div>
-<div class="form-group"><label class="form-label">نص الرأي</label><textarea class="form-textarea" id="testi-content" rows="3" required></textarea></div>
-<div class="checkbox-row"><input type="checkbox" id="testi-published"><label for="testi-published">نشر الرأي الآن</label></div>
-<button class="btn btn-primary" id="saveTestiBtn">حفظ الرأي</button>
-</div>
-
-<div class="section-title">الآراء الحالية</div>
-<div id="testimonialsList"></div>
-</section>
-
-<!-- Requests -->
-<section class="tab-panel" id="panel-requests">
-<div class="section-title">طلبات السير الذاتية من الشركات</div>
-<div class="table-wrap">
-<table>
-<thead><tr><th>الاسم</th><th>البريد</th><th>المدينة</th><th>الخبرة</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th></tr></thead>
-<tbody id="requestsTableBody"></tbody>
-</table>
-</div>
-</section>
-
-</main>
-
-<div class="toast" id="toast" role="alert"></div>
-
-<script>
-const API='/api';
-let token=localStorage.getItem('rasheh_token')||null;
-
-function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>t.classList.remove('show'),4000)}
-
-function showError(el,msg){el.textContent=msg;el.classList.add('show')}
-function hideError(el){el.classList.remove('show')}
-
-async function api(path,opts={}){
-  const headers={'Content-Type':'application/json',...opts.headers};
-  if(token) headers.Authorization='Bearer '+token;
-  const res=await fetch(API+path,{...opts,headers});
-  const text=await res.text();
-  let data;
-  try{data=JSON.parse(text)}catch(e){console.error('non-json',path,text.slice(0,150));throw new Error('استجابة غير صالحة من الخادم')}
-  if(res.status===401){token=null;localStorage.removeItem('rasheh_token');showLogin();return null}
-  return data;
-}
-
-function showLogin(){document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('adminHeader').classList.add('hidden');document.getElementById('dashboardContent').classList.add('hidden')}
-function showDashboard(){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('adminHeader').classList.remove('hidden');document.getElementById('dashboardContent').classList.remove('hidden')}
-
-// Tabs
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
-  });
-});
-
-// Login
-document.getElementById('loginForm').addEventListener('submit',async(e)=>{
-  e.preventDefault();
-  const err=document.getElementById('loginError');hideError(err);
-  const btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='جاري الدخول...';
-  const email=document.getElementById('email').value.trim();
-  const password=document.getElementById('password').value;
-  try{
-    const res=await fetch(API+'/auth?action=login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
-    const data=await res.json();
-    if(data.access_token){
-      token=data.access_token;localStorage.setItem('rasheh_token',token);
-      showDashboard();loadAll();
-    }else{showError(err,data.detail||'بريد أو كلمة مرور غير صحيحة')}
-  }catch(e){showError(err,'حدث خطأ في الاتصال بالخادم')}
-  finally{btn.disabled=false;btn.textContent='دخول'}
-});
-
-document.getElementById('logoutBtn').addEventListener('click',()=>{
-  token=null;localStorage.removeItem('rasheh_token');showLogin();
-});
-
-async function loadAll(){
-  try{
-    const me=await api('/me');
-    if(!me?.user) return showLogin();
-    if(!me.profile?.is_admin){toast('هذا الحساب ليس حساب إدارة','error');showLogin();return}
-    document.getElementById('adminEmail').textContent=me.user.email;
-
-    const stats=await api('/admin?resource=stats');
-    if(stats?.stats){
-      const s=stats.stats;
-      document.getElementById('s-clients').textContent=s.totalClients;
-      document.getElementById('s-candidates').textContent=s.totalCandidates;
-      document.getElementById('s-pending').textContent=s.pendingRequests;
-      document.getElementById('s-placements').textContent=s.totalPlacements;
-      document.getElementById('s-articles').textContent=s.totalArticles;
-      document.getElementById('s-testimonials').textContent=s.totalTestimonials;
-    }
-
-    await loadCmsSettings();
-    await loadArticlesList();
-    await loadTestimonialsList();
-    await loadRequests();
-  }catch(e){console.error(e);toast('فشل تحميل البيانات','error');showLogin()}
-}
-
-// CMS Content
-async function loadCmsSettings(){
-  const data=await api('/admin?resource=settings');
-  if(!data?.content) return;
-  const c=data.content;
-  document.getElementById('cms-hero-title').value=c.hero_title||'';
-  document.getElementById('cms-hero-text').value=c.hero_text||'';
-  document.getElementById('cms-video-url').value=c.video_url||'';
-  document.getElementById('cms-video-title').value=c.video_title||'';
-  const s=c.socials||{};
-  document.getElementById('soc-whatsapp').value=s.whatsapp||'';
-  document.getElementById('soc-linkedin').value=s.linkedin||'';
-  document.getElementById('soc-instagram').value=s.instagram||'';
-  document.getElementById('soc-x').value=s.x||'';
-  document.getElementById('soc-email').value=s.email||'';
-  const b=c.bank||{};
-  document.getElementById('bank-name').value=b.name||'';
-  document.getElementById('bank-account-name').value=b.account_name||'';
-  document.getElementById('bank-iban').value=b.iban||'';
-}
-
-document.getElementById('saveCmsBtn').addEventListener('click',async()=>{
-  const btn=document.getElementById('saveCmsBtn');btn.disabled=true;btn.textContent='جاري الحفظ...';
-  const payload={
-    hero_title:document.getElementById('cms-hero-title').value.trim(),
-    hero_text:document.getElementById('cms-hero-text').value.trim(),
-    video_url:document.getElementById('cms-video-url').value.trim(),
-    video_title:document.getElementById('cms-video-title').value.trim(),
-    socials:{
-      whatsapp:document.getElementById('soc-whatsapp').value.trim(),
-      linkedin:document.getElementById('soc-linkedin').value.trim(),
-      instagram:document.getElementById('soc-instagram').value.trim(),
-      x:document.getElementById('soc-x').value.trim(),
-      email:document.getElementById('soc-email').value.trim()
-    },
-    bank:{
-      name:document.getElementById('bank-name').value.trim(),
-      account_name:document.getElementById('bank-account-name').value.trim(),
-      iban:document.getElementById('bank-iban').value.trim()
-    }
-  };
-  try{
-    const data=await api('/admin?resource=settings',{method:'PUT',body:JSON.stringify(payload)});
-    if(data?.ok) toast('تم حفظ التغييرات بنجاح','success');
-    else toast(data?.detail||'فشل الحفظ','error');
-  }catch(e){toast('حدث خطأ أثناء الحفظ','error')}
-  finally{btn.disabled=false;btn.textContent='حفظ جميع التغييرات'}
-});
-
-// Articles
-function clearArticleForm(){
-  document.getElementById('article-id').value='';
-  document.getElementById('article-title').value='';
-  document.getElementById('article-tag').value='';
-  document.getElementById('article-cover').value='';
-  document.getElementById('article-excerpt').value='';
-  document.getElementById('article-content').value='';
-  document.getElementById('article-published').checked=false;
-}
-document.getElementById('clearArticleFormBtn').addEventListener('click',clearArticleForm);
-
-async function loadArticlesList(){
-  const data=await api('/admin?resource=articles');
-  const list=document.getElementById('articlesList');
-  if(!data?.articles?.length){list.innerHTML='<p class="empty-note">لا توجد مقالات بعد</p>';return}
-  list.innerHTML=data.articles.map(a=>`
-    <div class="list-item">
-      <div class="list-item-content">
-        <div class="list-item-title">${a.title} <span class="badge badge-${a.published?'published':'draft'}">${a.published?'منشور':'مسودة'}</span></div>
-        <div class="list-item-sub">${a.excerpt||''}</div>
-      </div>
-      <div class="action-btns">
-        <button class="icon-btn" onclick="editArticle('${a.id}')" title="تعديل">✎</button>
-        <button class="icon-btn danger" onclick="deleteArticle('${a.id}')" title="حذف">✕</button>
-      </div>
-    </div>
-  `).join('');
-  window.__articles=data.articles;
-}
-
-window.editArticle=function(id){
-  const a=window.__articles.find(x=>x.id===id);
-  if(!a) return;
-  document.getElementById('article-id').value=a.id;
-  document.getElementById('article-title').value=a.title||'';
-  document.getElementById('article-tag').value=(a.tags&&a.tags[0])||'';
-  document.getElementById('article-cover').value=a.cover_image||'';
-  document.getElementById('article-excerpt').value=a.excerpt||'';
-  document.getElementById('article-content').value=a.content||'';
-  document.getElementById('article-published').checked=Boolean(a.published);
-  window.scrollTo({top:0,behavior:'smooth'});
-};
-
-window.deleteArticle=async function(id){
-  if(!confirm('حذف هذا المقال نهائياً؟')) return;
-  const data=await api('/admin?resource=articles&id='+id,{method:'DELETE'});
-  if(data?.ok){toast('تم حذف المقال','success');loadArticlesList()}
-  else toast(data?.detail||'فشل الحذف','error');
-};
-
-document.getElementById('saveArticleBtn').addEventListener('click',async()=>{
-  const id=document.getElementById('article-id').value;
-  const title=document.getElementById('article-title').value.trim();
-  const content=document.getElementById('article-content').value.trim();
-  if(!title||!content){toast('العنوان والمحتوى مطلوبان','error');return}
-  const payload={
-    title,
-    content,
-    excerpt:document.getElementById('article-excerpt').value.trim(),
-    cover_image:document.getElementById('article-cover').value.trim(),
-    tags:[document.getElementById('article-tag').value.trim()].filter(Boolean),
-    published:document.getElementById('article-published').checked
-  };
-  const btn=document.getElementById('saveArticleBtn');btn.disabled=true;btn.textContent='جاري الحفظ...';
-  try{
-    let data;
-    if(id){payload.id=id;data=await api('/admin?resource=articles',{method:'PUT',body:JSON.stringify(payload)})}
-    else{data=await api('/admin?resource=articles',{method:'POST',body:JSON.stringify(payload)})}
-    if(data?.ok){toast('تم حفظ المقال بنجاح','success');clearArticleForm();loadArticlesList()}
-    else toast(data?.detail||'فشل الحفظ','error');
-  }catch(e){toast('حدث خطأ أثناء الحفظ','error')}
-  finally{btn.disabled=false;btn.textContent='حفظ المقال'}
-});
-
-// Testimonials
-function clearTestiForm(){
-  document.getElementById('testi-id').value='';
-  document.getElementById('testi-name').value='';
-  document.getElementById('testi-role').value='';
-  document.getElementById('testi-company').value='';
-  document.getElementById('testi-rating').value='5';
-  document.getElementById('testi-content').value='';
-  document.getElementById('testi-published').checked=false;
-}
-document.getElementById('clearTestiFormBtn').addEventListener('click',clearTestiForm);
-
-async function loadTestimonialsList(){
-  const data=await api('/admin?resource=testimonials');
-  const list=document.getElementById('testimonialsList');
-  if(!data?.testimonials?.length){list.innerHTML='<p class="empty-note">لا توجد آراء بعد</p>';return}
-  list.innerHTML=data.testimonials.map(t=>`
-    <div class="list-item">
-      <div class="list-item-content">
-        <div class="list-item-title">${t.author_name} <span class="badge badge-${t.published?'published':'draft'}">${t.published?'منشور':'مسودة'}</span></div>
-        <div class="list-item-sub">${t.content}</div>
-      </div>
-      <div class="action-btns">
-        <button class="icon-btn" onclick="editTesti('${t.id}')" title="تعديل">✎</button>
-        <button class="icon-btn danger" onclick="deleteTesti('${t.id}')" title="حذف">✕</button>
-      </div>
-    </div>
-  `).join('');
-  window.__testis=data.testimonials;
-}
-
-window.editTesti=function(id){
-  const t=window.__testis.find(x=>x.id===id);
-  if(!t) return;
-  document.getElementById('testi-id').value=t.id;
-  document.getElementById('testi-name').value=t.author_name||'';
-  document.getElementById('testi-role').value=t.author_role||'';
-  document.getElementById('testi-company').value=t.company_name||'';
-  document.getElementById('testi-rating').value=t.rating||5;
-  document.getElementById('testi-content').value=t.content||'';
-  document.getElementById('testi-published').checked=Boolean(t.published);
-  window.scrollTo({top:0,behavior:'smooth'});
-};
-
-window.deleteTesti=async function(id){
-  if(!confirm('حذف هذا الرأي نهائياً؟')) return;
-  const data=await api('/admin?resource=testimonials&id='+id,{method:'DELETE'});
-  if(data?.ok){toast('تم حذف الرأي','success');loadTestimonialsList()}
-  else toast(data?.detail||'فشل الحذف','error');
-};
-
-document.getElementById('saveTestiBtn').addEventListener('click',async()=>{
-  const id=document.getElementById('testi-id').value;
-  const author_name=document.getElementById('testi-name').value.trim();
-  const content=document.getElementById('testi-content').value.trim();
-  if(!author_name||!content){toast('الاسم والنص مطلوبان','error');return}
-  const payload={
-    author_name,
-    author_role:document.getElementById('testi-role').value.trim(),
-    company_name:document.getElementById('testi-company').value.trim(),
-    rating:parseInt(document.getElementById('testi-rating').value)||5,
-    content,
-    published:document.getElementById('testi-published').checked
-  };
-  const btn=document.getElementById('saveTestiBtn');btn.disabled=true;btn.textContent='جاري الحفظ...';
-  try{
-    let data;
-    if(id){payload.id=id;data=await api('/admin?resource=testimonials',{method:'PUT',body:JSON.stringify(payload)})}
-    else{data=await api('/admin?resource=testimonials',{method:'POST',body:JSON.stringify(payload)})}
-    if(data?.ok){toast('تم حفظ الرأي بنجاح','success');clearTestiForm();loadTestimonialsList()}
-    else toast(data?.detail||'فشل الحفظ','error');
-  }catch(e){toast('حدث خطأ أثناء الحفظ','error')}
-  finally{btn.disabled=false;btn.textContent='حفظ الرأي'}
-});
-
-// Requests
-async function loadRequests(){
-  const data=await api('/admin?resource=requests');
-  const tbody=document.getElementById('requestsTableBody');
-  if(!data?.requests?.length){tbody.innerHTML='<tr><td colspan="7" class="empty-note">لا توجد طلبات حالياً</td></tr>';return}
-  tbody.innerHTML=data.requests.map(r=>`
-    <tr>
-      <td>${r.full_name}</td>
-      <td>${r.email}</td>
-      <td>${r.city||'—'}</td>
-      <td>${r.experience_years||0} سنة</td>
-      <td><span class="badge badge-${r.status}">${r.status}</span></td>
-      <td>${new Date(r.created_at).toLocaleDateString('ar-EG')}</td>
-      <td>
-        <select onchange="updateRequestStatus('${r.id}', this.value)" class="form-input" style="padding:6px 10px;font-size:.8rem">
-          <option value="pending" ${r.status==='pending'?'selected':''}>قيد الانتظار</option>
-          <option value="in_review" ${r.status==='in_review'?'selected':''}>قيد المراجعة</option>
-          <option value="approved" ${r.status==='approved'?'selected':''}>مقبول</option>
-          <option value="rejected" ${r.status==='rejected'?'selected':''}>مرفوض</option>
-        </select>
-      </td>
-    </tr>
-  `).join('');
-}
-
-window.updateRequestStatus=async function(id,status){
-  const data=await api('/admin?resource=requests',{method:'PUT',body:JSON.stringify({id,status})});
-  if(data?.ok) toast('تم تحديث الحالة','success');
-  else toast(data?.detail||'فشل التحديث','error');
-};
-
-// Init
-if(token){showDashboard();loadAll()}else{showLogin()}
-</script>
-</body>
-</html>
+<div class="stat-card"><div class="stat-label">طلبات قيد المراجعة</div><div class="stat-va
