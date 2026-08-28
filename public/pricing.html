@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الباقات والأسعار — رَشّح</title>
+<link rel="icon" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#3b82f6;--primary-light:#dbeafe;--bg:#f8fafc;--surface:#fff;--text:#0f172a;--text-muted:#64748b;--border:#e2e8f0;--radius:16px;--shadow:0 1px 3px rgba(15,23,42,.06);--shadow-lg:0 10px 25px -5px rgba(15,23,42,.08);--shadow-xl:0 20px 40px -12px rgba(15,23,42,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text)}
+a{color:inherit;text-decoration:none}
+header{background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0}
+.header-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
+.logo img{width:130px;height:58px;object-fit:contain}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer;border:none}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.container{max-width:1280px;margin:0 auto;padding:60px 24px}
+.page-head{text-align:center;margin-bottom:56px}
+.section-tag{display:inline-block;font-size:.85rem;font-weight:700;color:var(--primary);text-transform:uppercase;margin-bottom:16px}
+.page-head h1{font-size:clamp(2rem,4vw,2.75rem);font-weight:900;margin-bottom:16px}
+.page-head p{color:var(--text-muted);font-size:1.1rem}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.plan-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px 30px;box-shadow:var(--shadow);position:relative}
+.plan-card.popular{border:2px solid var(--primary);box-shadow:var(--shadow-xl)}
+.popular-badge{position:absolute;top:-14px;right:50%;transform:translateX(50%);background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:6px 18px;border-radius:999px;white-space:nowrap}
+.plan-name{font-size:1.3rem;font-weight:800;margin-bottom:8px}
+.plan-price{font-size:2.6rem;font-weight:900;margin-bottom:4px}
+.plan-price span{font-size:1rem;font-weight:600;color:var(--text-muted)}
+.plan-cycle{color:var(--text-muted);font-size:.88rem;margin-bottom:24px}
+.plan-features{list-style:none;margin-bottom:28px}
+.plan-features li{padding:9px 0;font-size:.92rem}
+.plan-btn{width:100%;padding:14px;border-radius:12px}
+@media (max-width:900px){.plans-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="header-inner"><a href="/" class="logo"><img src="/rasheh-logo.png" alt="رَشّح"></a>
+<div style="display:flex;gap:10px"><a href="/" class="btn btn-outline">الرئيسية</a><a href="/billing.html" class="btn btn-primary" id="billingLink">حسابي والباقات</a></div></div></header>
+
+<main class="container">
+<div class="page-head"><span class="section-tag">الباقات والأسعار</span><h1>اختر الباقة المناسبة لشركتك</h1><p>باقات مرنة تناسب كل مراحل التوظيف، بدون عقود طويلة أو رسوم خفية</p></div>
+<div class="plans-grid" id="plansGrid"><p style="text-align:center;color:var(--text-muted);grid-column:1/-1">جاري تحميل الباقات...</p></div>
+</main>
+
+<script>
+const API='/api';
+let token=localStorage.getItem('rasheh_token')||null;
+async function api(path){
+  const headers={};
+  if(token) headers.Authorization='Bearer '+token;
+  const res=await fetch(API+path,{headers});
+  try{return await res.json()}catch(e){return null}
+}
+document.getElementById('billingLink').href = token ? '/billing.html' : '/#contact';
+function fmt(p){return Number(p).toLocaleString('ar-SA')}
+
+async function loadPlans(){
+  const data=await api('/payments?resource=plans');
+  const grid=document.getElementById('plansGrid');
+  if(!data?.plans?.length){grid.innerHTML='<p style="text-align:center;grid-column:1/-1">لا توجد باقات متاحة حالياً</p>';return}
+  grid.innerHTML=data.plans.map(p=>{
+    const feats=(p.features||[]).map(f=>`<li>✓ ${f}</li>`).join('');
+    return `<div class="plan-card ${p.is_popular?'popular':''}">
+      ${p.is_popular?'<span class="popular-badge">الأكثر طلباً</span>':''}
+      <div class="plan-name">${p.name}</div>
+      <div class="plan-price">${fmt(p.price)} <span>${p.currency||'ريال'}/شهرياً</span></div>
+      <div class="plan-cycle">صلاحية 30 يوماً</div>
+      <ul class="plan-features">${feats}</ul>
+      <a href="${token?'/billing.html?plan='+p.id:'/#contact'}" class="btn btn-primary plan-btn">${token?'اشترك الآن':'سجّل دخولك للاشتراك'}</a>
+    </div>`;
+  }).join('');
+}
+loadPlans();
+</script>
+</body>
+</html>
