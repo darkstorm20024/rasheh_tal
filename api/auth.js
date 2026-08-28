@@ -33,13 +33,15 @@ async function handleRegister(req, res) {
 
   const {
     company_name,
+    contact_name,
     email,
+    phone,
     password
   } = body;
 
-  if (!company_name || !email || !password) {
+  if (!company_name || !contact_name || !email || !phone || !password) {
     return reply(res, 400, {
-      detail: 'اسم الشركة، البريد الإلكتروني، وكلمة المرور مطلوبة'
+      detail: 'اسم الشركة، اسم المسؤول، البريد الإلكتروني، رقم الجوال، وكلمة المرور مطلوبة'
     });
   }
 
@@ -51,7 +53,7 @@ async function handleRegister(req, res) {
 
   if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
     return reply(res, 400, {
-      detail: 'هذا البريد محجوز'
+      detail: 'هذا البريد محجوز لحساب الإدارة'
     });
   }
 
@@ -63,33 +65,35 @@ async function handleRegister(req, res) {
       password,
       email_confirm: true,
       user_metadata: {
-        role: 'company'
+        role: 'company',
+        company_name
       }
     });
 
   if (authError) {
-    throw new Error(authError.message || 'فشل إنشاء الحساب');
+    throw new Error(authError.message || 'فشل إنشاء حساب الدخول');
   }
 
   /*
-    نرسل فقط أعمدة أساسية جداً:
-    auth_user_id + company_name + email
+    هذه هي الأعمدة الموجودة فعلياً في جدول clients:
+    - auth_user_id
+    - company_name
+    - contact_name
+    - email
+    - phone
+    - credits_balance
 
-    لا نرسل:
-    city
-    contact_person
-    phone
-    plan
-
-    لأن جدول clients الحقيقي عندك لا يحتوي على الأقل
-    city و contact_person، وقد يختلف عن ملف SQL السابق.
+    لا نرسل city أو contact_person أو plan لأنها غير موجودة في جدولك.
   */
   const { error: profileError } = await supa
     .from('clients')
     .insert({
       auth_user_id: authData.user.id,
       company_name,
-      email
+      contact_name,
+      email,
+      phone,
+      credits_balance: 0
     });
 
   if (profileError) {
@@ -102,7 +106,7 @@ async function handleRegister(req, res) {
 
   return reply(res, 200, {
     ok: true,
-    detail: 'تم إنشاء الحساب بنجاح'
+    detail: 'تم إنشاء حساب الشركة بنجاح'
   });
 }
 
