@@ -8,7 +8,7 @@ const defaults = {
   video_url: '',
   video_title: 'كيف توفر منصة رَشّح وقت ومصاريف التوظيف؟',
   video_text: 'شاهد جولة سريعة في تجربة المطابقة الذكية.',
-  socials: { whatsapp: '', linkedin: '', instagram: '', x: '', email: '' },
+  socials: { whatsapp: '', linkedin: '', instagram: '', x: '', email: 'info@rasheh.com' },
   bank: { name: '', account_name: '', iban: '' },
   news: []
 };
@@ -72,6 +72,20 @@ async function requireAdmin(req) {
   return currentUser;
 }
 
+async function requireClient(req) {
+  const currentUser = await user(req);
+  if (adminOK(currentUser)) throw new ApiError(403, 'هذه الميزة مخصصة للشركات فقط.');
+
+  const { data, error } = await db()
+    .from('clients')
+    .select('*')
+    .eq('auth_user_id', currentUser.id)
+    .single();
+
+  if (error || !data) throw new ApiError(403, 'ملف الشركة غير موجود.');
+  return { user: currentUser, client: data };
+}
+
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
   try { return JSON.parse(req.body || '{}'); } catch { return {}; }
@@ -87,4 +101,4 @@ function slugify(text) {
     .replace(/-+/g, '-');
 }
 
-module.exports = { db, anon, reply, errorReply, user, adminOK, requireAdmin, defaults, ApiError, ADMIN_EMAIL, readBody, slugify };
+module.exports = { db, anon, reply, errorReply, user, adminOK, requireAdmin, requireClient, defaults, ApiError, ADMIN_EMAIL, readBody, slugify };
