@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'No build step required'",
+    "build": "echo \"No build step required\"",
     "start": "vercel dev"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
   },
-  "engines": { "node": "20.x" }
+  "engines": {
+    "node": "22.x"
+  }
 }
