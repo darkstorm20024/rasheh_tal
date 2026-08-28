@@ -33,15 +33,13 @@ async function handleRegister(req, res) {
 
   const {
     company_name,
-    contact_person,
     email,
-    phone,
     password
   } = body;
 
-  if (!company_name || !contact_person || !email || !phone || !password) {
+  if (!company_name || !email || !password) {
     return reply(res, 400, {
-      detail: 'اسم الشركة، اسم المسؤول، البريد، الجوال، وكلمة المرور مطلوبة'
+      detail: 'اسم الشركة، البريد الإلكتروني، وكلمة المرور مطلوبة'
     });
   }
 
@@ -74,19 +72,24 @@ async function handleRegister(req, res) {
   }
 
   /*
-    مهم:
-    لا يوجد city هنا نهائياً،
-    لأن جدول clients الحالي في قاعدة بياناتك لا يحتوي هذا العمود.
+    نرسل فقط أعمدة أساسية جداً:
+    auth_user_id + company_name + email
+
+    لا نرسل:
+    city
+    contact_person
+    phone
+    plan
+
+    لأن جدول clients الحقيقي عندك لا يحتوي على الأقل
+    city و contact_person، وقد يختلف عن ملف SQL السابق.
   */
   const { error: profileError } = await supa
     .from('clients')
     .insert({
       auth_user_id: authData.user.id,
       company_name,
-      contact_person,
-      email,
-      phone,
-      plan: 'basic'
+      email
     });
 
   if (profileError) {
