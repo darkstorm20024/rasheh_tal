@@ -8,11 +8,12 @@ const {
 } = require('./_shared');
 
 /*
-  قاموس ترجمة ومرادفات عربية/إنجليزية.
+  قاموس عربي/إنجليزي للمطابقة الذكية.
 
-  مثال:
-  محاسب -> accountant / accounting / finance
-  developer -> مطور / مبرمج / full stack
+  أمثلة:
+  محاسب ↔ accountant / accounting / finance
+  مطور ↔ developer / programmer
+  مبيعات ↔ sales / business development
 */
 const TRANSLATION_MAP = {
   محاسب: [
@@ -293,9 +294,17 @@ function unique(values) {
   return [...new Set(values.filter(Boolean))];
 }
 
-function splitSkills(value) {
+/*
+  skills في جدولك نوعها ARRAY.
+  لذلك نتعامل معها كمصفوفة مباشرة.
+*/
+function skillArray(value) {
   if (Array.isArray(value)) {
-    return unique(value.map(normalizeText));
+    return unique(
+      value
+        .map(normalizeText)
+        .filter(Boolean)
+    );
   }
 
   return unique(
@@ -306,7 +315,7 @@ function splitSkills(value) {
   );
 }
 
-function getSearchKeywords(query) {
+function getTranslatedKeywords(query) {
   const normalizedQuery = normalizeText(query);
 
   if (!normalizedQuery) {
@@ -322,15 +331,15 @@ function getSearchKeywords(query) {
     .filter(word => word.length > 1)
     .forEach(word => keywords.add(word));
 
-  Object.entries(TRANSLATION_MAP).forEach(([key, terms]) => {
+  Object.entries(TRANSLATION_MAP).forEach(([key, synonyms]) => {
     const normalizedKey = normalizeText(key);
 
     if (
       normalizedQuery.includes(normalizedKey) ||
       normalizedKey.includes(normalizedQuery)
     ) {
-      terms.forEach(term => {
-        keywords.add(normalizeText(term));
+      synonyms.forEach(synonym => {
+        keywords.add(normalizeText(synonym));
       });
     }
   });
@@ -362,17 +371,17 @@ function textContains(text, term) {
 }
 
 function calculateMatch(candidate, criteria) {
-  const requestedTitle = normalizeText(criteria.jobtitle);
+  const requestedTitle = normalizeText(criteria.job_title);
   const requestedCity = normalizeText(criteria.city);
-  const requestedSkills = splitSkills(criteria.skills);
+  const requestedSkills = skillArray(criteria.skills);
   const requiredExperience = Math.max(
     0,
-    Number(criteria.minexperience || 0)
+    Number(criteria.min_experience || 0)
   );
 
-  const candidateJobTitle = normalizeText(candidate.jobtitle);
+  const candidateJobTitle = normalizeText(candidate.job_title);
   const candidateEducation = normalizeText(candidate.education);
-  const candidateSkills = splitSkills(candidate.skills);
+  const candidateSkills = skillArray(candidate.skills);
 
   const candidateText = [
     candidateJobTitle,
@@ -384,41 +393,41 @@ function calculateMatch(candidate, criteria) {
   let skillsScore = 0;
   let experienceScore = 0;
   let cityScore = 0;
-  let titleMatched = false;
+  let jobMatched = false;
 
   /*
-    50 نقطة للمسمى الوظيفي.
+    50 نقطة للمسمى الوظيفي والترجمة.
   */
   if (!requestedTitle) {
     jobScore = 25;
-    titleMatched = true;
+    jobMatched = true;
   } else if (textContains(candidateJobTitle, requestedTitle)) {
     jobScore = 50;
-    titleMatched = true;
+    jobMatched = true;
   } else {
-    const keywords = getSearchKeywords(requestedTitle);
+    const keywords = getTranslatedKeywords(requestedTitle);
 
-    const matchedKeywords = keywords.filter(keyword => {
+    const matches = keywords.filter(keyword => {
       return textContains(candidateText, keyword);
     });
 
-    if (matchedKeywords.length >= 3) {
+    if (matches.length >= 3) {
       jobScore = 46;
-      titleMatched = true;
-    } else if (matchedKeywords.length === 2) {
+      jobMatched = true;
+    } else if (matches.length === 2) {
       jobScore = 40;
-      titleMatched = true;
-    } else if (matchedKeywords.length === 1) {
+      jobMatched = true;
+    } else if (matches.length === 1) {
       jobScore = 30;
-      titleMatched = true;
+      jobMatched = true;
     }
   }
 
   /*
-    لو المستخدم كتب وظيفة ولا يوجد تطابق وظيفي نهائياً:
+    لو كتب مسمى وظيفة ولم نكتشف أي توافق،
     لا نعرض المرشح.
   */
-  if (requestedTitle && !titleMatched) {
+  if (requestedTitle && !jobMatched) {
     return {
       percentage: 0,
       matched: false,
@@ -441,14 +450,14 @@ function calculateMatch(candidate, criteria) {
     skillsScore = 15;
   } else {
     requestedSkills.forEach(requestedSkill => {
-      const exists = candidateSkills.some(candidateSkill => {
+      const found = candidateSkills.some(candidateSkill => {
         return (
           textContains(candidateSkill, requestedSkill) ||
           textContains(requestedSkill, candidateSkill)
         );
       });
 
-      if (exists) {
+      if (found) {
         matchedSkills.push(requestedSkill);
       }
     });
@@ -459,11 +468,11 @@ function calculateMatch(candidate, criteria) {
   }
 
   /*
-    15 نقطة للخبرة.
+    15 نقطة لسنوات الخبرة.
   */
   const candidateExperience = Math.max(
     0,
-    Number(candidate.yearsofexperience || 0)
+    Number(candidate.years_of_experience || 0)
   );
 
   if (!requiredExperience) {
@@ -487,7 +496,12 @@ function calculateMatch(candidate, criteria) {
 
   const percentage = Math.min(
     100,
-    Math.round(jobScore + skillsScore + experienceScore + cityScore)
+    Math.round(
+      jobScore +
+      skillsScore +
+      experienceScore +
+      cityScore
+    )
   );
 
   return {
@@ -503,7 +517,7 @@ function calculateMatch(candidate, criteria) {
   };
 }
 
-/* محتوى الصفحة الرئيسية */
+/* CMS */
 
 async function handleContent(req, res) {
   const { data, error } = await db()
@@ -522,7 +536,7 @@ async function handleContent(req, res) {
   });
 }
 
-/* المقالات */
+/* Articles */
 
 async function handleArticles(req, res) {
   const slug = req.query.slug;
@@ -553,7 +567,9 @@ async function handleArticles(req, res) {
 
   const { data, error } = await db()
     .from('articles')
-    .select('id, slug, title, excerpt, cover_image, published_at, author_name, tags')
+    .select(
+      'id, slug, title, excerpt, cover_image, published_at, author_name, tags'
+    )
     .eq('published', true)
     .order('published_at', {
       ascending: false
@@ -569,12 +585,14 @@ async function handleArticles(req, res) {
   });
 }
 
-/* آراء العملاء */
+/* Testimonials */
 
 async function handleTestimonials(req, res) {
   const { data, error } = await db()
     .from('testimonials')
-    .select('id, author_name, author_role, company_name, content, rating, avatar_url')
+    .select(
+      'id, author_name, author_role, company_name, content, rating, avatar_url'
+    )
     .eq('published', true)
     .order('created_at', {
       ascending: false
@@ -590,7 +608,7 @@ async function handleTestimonials(req, res) {
   });
 }
 
-/* الإحصائيات */
+/* Public stats */
 
 async function handleStats(req, res) {
   const [
@@ -625,44 +643,59 @@ async function handleStats(req, res) {
   });
 }
 
-/* البحث الذكي عن المرشحين */
+/*
+  Smart candidate search.
 
+  مثال للرابط:
+  /api/public?resource=candidates&q=محاسب&city=الرياض&skill=Excel,ERP&min_experience=3
+*/
 async function handleCandidatesSearch(req, res) {
   const { client } = await requireClient(req);
 
-  const jobtitle = String(req.query.q || '').trim();
-  const city = String(req.query.city || '').trim();
-  const skills = String(req.query.skill || '').trim();
-  const minexperience = Math.max(
-    0,
-    Number(req.query.min_experience || 0)
-  );
+  const criteria = {
+    job_title: String(req.query.q || '').trim(),
+    city: String(req.query.city || '').trim(),
+    skills: String(req.query.skill || '').trim(),
+    min_experience: Math.max(
+      0,
+      Number(req.query.min_experience || 0)
+    )
+  };
 
   /*
-    أسماء أعمدة candidates الحقيقية:
-    fullname / jobtitle / yearsofexperience / resumeurl
+    هذه أسماء الأعمدة مطابقة تماماً للصور التي أرسلتها:
+    full_name
+    first_name
+    job_title
+    years_of_experience
+    expected_salary
+    resume_url
+    skills (ARRAY)
   */
   const { data: candidates, error } = await db()
     .from('candidates')
     .select(`
       id,
-      fullname,
-      firstname,
+      full_name,
+      first_name,
       email,
       phone,
-      jobtitle,
+      job_title,
       city,
-      worktype,
+      work_type,
       gender,
-      yearsofexperience,
+      years_of_experience,
       education,
-      expectedsalary,
+      expected_salary,
       skills,
-      resumeurl,
-      status
+      resume_url,
+      raw_resume_text,
+      status,
+      created_at,
+      updated_at
     `)
     .eq('status', 'active')
-    .order('yearsofexperience', {
+    .order('years_of_experience', {
       ascending: false
     })
     .limit(250);
@@ -671,33 +704,26 @@ async function handleCandidatesSearch(req, res) {
     throw error;
   }
 
-  const criteria = {
-    jobtitle,
-    city,
-    skills,
-    minexperience
-  };
-
   const results = (candidates || [])
     .map(candidate => {
       const match = calculateMatch(candidate, criteria);
 
       return {
         candidate_id: candidate.id,
-        fullname: candidate.fullname,
-        firstname: candidate.firstname,
-        jobtitle: candidate.jobtitle,
+        full_name: candidate.full_name,
+        first_name: candidate.first_name,
+        job_title: candidate.job_title,
         city: candidate.city,
-        worktype: candidate.worktype,
+        work_type: candidate.work_type,
         gender: candidate.gender,
-        yearsofexperience: candidate.yearsofexperience || 0,
+        years_of_experience: candidate.years_of_experience || 0,
         education: candidate.education || '',
-        expected_salary: candidate.expectedsalary || null,
-        skills: splitSkills(candidate.skills),
+        expected_salary: candidate.expected_salary || null,
+        skills: skillArray(candidate.skills),
         match_percentage: match.percentage,
         matched_skills: match.matchedSkills,
         match_breakdown: match.breakdown,
-        has_cv: Boolean(candidate.resumeurl)
+        has_resume: Boolean(candidate.resume_url)
       };
     })
     .filter(candidate => candidate.match_percentage >= 40)
@@ -707,40 +733,32 @@ async function handleCandidatesSearch(req, res) {
       }
 
       return (
-        Number(b.yearsofexperience || 0) -
-        Number(a.yearsofexperience || 0)
+        Number(b.years_of_experience || 0) -
+        Number(a.years_of_experience || 0)
       );
     });
 
   return reply(res, 200, {
     ok: true,
     total: results.length,
-    query: {
-      jobtitle,
-      city,
-      skills,
-      minexperience
-    },
 
-    /*
-      الاسم هنا مطابق للعمود الذي أرسلته:
-      credeits_balance
-    */
-    client_credits: Number(client.credeits_balance || 0),
+    query: criteria,
+
+    client_credits: Number(
+      client.credits_balance || 0
+    ),
 
     candidates: results
   });
 }
 
-/* طلب سيرة ذاتية */
+/* Request candidate CV */
 
 async function handleCandidateRequest(req, res) {
   const { client } = await requireClient(req);
   const body = readBody(req);
 
-  const candidateId = body.candidate_id;
-
-  if (!candidateId) {
+  if (!body.candidate_id) {
     return reply(res, 400, {
       detail: 'معرّف المرشح مطلوب'
     });
@@ -749,7 +767,7 @@ async function handleCandidateRequest(req, res) {
   const { data: candidate, error: candidateError } = await db()
     .from('candidates')
     .select('*')
-    .eq('id', candidateId)
+    .eq('id', body.candidate_id)
     .eq('status', 'active')
     .single();
 
@@ -763,7 +781,7 @@ async function handleCandidateRequest(req, res) {
     .from('cv_requests')
     .select('id, status')
     .eq('client_id', client.id)
-    .eq('candidate_id', candidateId)
+    .eq('candidate_id', candidate.id)
     .maybeSingle();
 
   if (existing) {
@@ -774,18 +792,22 @@ async function handleCandidateRequest(req, res) {
     });
   }
 
+  /*
+    هذا الجزء يستخدم schema cv_requests السابق:
+    full_name / experience_years / cv_url.
+  */
   const { data: requestRow, error: requestError } = await db()
     .from('cv_requests')
     .insert({
       client_id: client.id,
       candidate_id: candidate.id,
-      full_name: candidate.fullname,
+      full_name: candidate.full_name,
       email: candidate.email,
       phone: candidate.phone,
       city: candidate.city,
-      experience_years: candidate.yearsofexperience || 0,
-      skills: splitSkills(candidate.skills),
-      cv_url: candidate.resumeurl,
+      experience_years: candidate.years_of_experience || 0,
+      skills: candidate.skills || [],
+      cv_url: candidate.resume_url,
       status: 'pending'
     })
     .select()
@@ -802,7 +824,7 @@ async function handleCandidateRequest(req, res) {
   });
 }
 
-/* طلبات الشركة السابقة */
+/* Company own requests */
 
 async function handleMyRequests(req, res) {
   const { client } = await requireClient(req);
