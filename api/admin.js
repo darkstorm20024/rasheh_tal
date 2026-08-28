@@ -39,7 +39,7 @@ async function handleStats(req, res) {
 async function handleClients(req, res) {
   const { data, error } = await db()
     .from('clients')
-    .select('id, company_name, email, contact_person, city, plan, created_at')
+    .select('id, company_name, email, contact_person, city, plan, plan_status, plan_expires_at, created_at')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return reply(res, 200, { ok: true, clients: data || [] });
@@ -222,6 +222,31 @@ async function handleTestimonials(req, res) {
   return reply(res, 405, { detail: 'Method not allowed' });
 }
 
+async function handlePlans(req, res) {
+  if (req.method === 'GET') {
+    const { data, error } = await db().from('plans').select('*').order('sort_order', { ascending: true });
+    if (error) throw error;
+    return reply(res, 200, { ok: true, plans: data || [] });
+  }
+
+  if (req.method === 'PUT') {
+    const body = readBody(req);
+    if (!body.id) return reply(res, 400, { detail: 'معرّف الباقة مطلوب' });
+    const updates = { ...body };
+    delete updates.id;
+    const { data, error } = await db()
+      .from('plans')
+      .update(updates)
+      .eq('id', body.id)
+      .select()
+      .single();
+    if (error) throw error;
+    return reply(res, 200, { ok: true, plan: data });
+  }
+
+  return reply(res, 405, { detail: 'Method not allowed' });
+}
+
 module.exports = async (req, res) => {
   try {
     await requireAdmin(req);
@@ -233,6 +258,7 @@ module.exports = async (req, res) => {
     if (resource === 'settings') return await handleSettings(req, res);
     if (resource === 'articles') return await handleArticles(req, res);
     if (resource === 'testimonials') return await handleTestimonials(req, res);
+    if (resource === 'plans') return await handlePlans(req, res);
     return reply(res, 400, { detail: 'مورد غير معروف' });
   } catch (error) {
     return errorReply(res, error);
