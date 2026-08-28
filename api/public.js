@@ -1,262 +1,291 @@
-const { db, reply, errorReply, defaults, requireClient, readBody } = require('./_shared');
+const {
+  db,
+  reply,
+  errorReply,
+  defaults,
+  requireClient,
+  readBody
+} = require('./_shared');
 
 /*
-  ملف البحث والبيانات العامة.
+  قاموس ترجمة ومرادفات عربية/إنجليزية.
 
-  متوافق مع جدول candidates الفعلي:
-  id, fullname, firstname, email, phone, jobtitle, city, worktype,
-  gender, yearsofexperience, education, expectedsalary, skills,
-  resumeurl, rawresumetext, status, createdat, updatedat
+  مثال:
+  محاسب -> accountant / accounting / finance
+  developer -> مطور / مبرمج / full stack
 */
-
 const TRANSLATION_MAP = {
-  "محاسب": [
-    "محاسب",
-    "محاسبة",
-    "accountant",
-    "accounting",
-    "financial accountant",
-    "accounting specialist",
-    "finance",
-    "مالية"
+  محاسب: [
+    'محاسب',
+    'محاسبة',
+    'accountant',
+    'accounting',
+    'financial accountant',
+    'accounting specialist',
+    'finance',
+    'مالية'
   ],
-  "accountant": [
-    "محاسب",
-    "محاسبة",
-    "accountant",
-    "accounting",
-    "financial accountant",
-    "accounting specialist",
-    "finance",
-    "مالية"
+
+  accountant: [
+    'محاسب',
+    'محاسبة',
+    'accountant',
+    'accounting',
+    'financial accountant',
+    'accounting specialist',
+    'finance',
+    'مالية'
   ],
-  "مطور": [
-    "مطور",
-    "مبرمج",
-    "برمجة",
-    "developer",
-    "software developer",
-    "web developer",
-    "programmer",
-    "full stack"
+
+  مطور: [
+    'مطور',
+    'مبرمج',
+    'برمجة',
+    'developer',
+    'software developer',
+    'web developer',
+    'programmer',
+    'full stack'
   ],
-  "developer": [
-    "مطور",
-    "مبرمج",
-    "برمجة",
-    "developer",
-    "software developer",
-    "web developer",
-    "programmer",
-    "full stack"
+
+  developer: [
+    'مطور',
+    'مبرمج',
+    'برمجة',
+    'developer',
+    'software developer',
+    'web developer',
+    'programmer',
+    'full stack'
   ],
-  "مطور واجهات": [
-    "مطور واجهات",
-    "frontend",
-    "front end",
-    "react",
-    "vue",
-    "angular",
-    "javascript",
-    "typescript",
-    "html",
-    "css"
+
+  frontend: [
+    'frontend',
+    'front end',
+    'مطور واجهات',
+    'react',
+    'vue',
+    'angular',
+    'javascript',
+    'typescript',
+    'html',
+    'css'
   ],
-  "frontend": [
-    "مطور واجهات",
-    "frontend",
-    "front end",
-    "react",
-    "vue",
-    "angular",
-    "javascript",
-    "typescript",
-    "html",
-    "css"
+
+  'مطور واجهات': [
+    'frontend',
+    'front end',
+    'مطور واجهات',
+    'react',
+    'vue',
+    'angular',
+    'javascript',
+    'typescript',
+    'html',
+    'css'
   ],
-  "مطور خلفي": [
-    "مطور خلفي",
-    "backend",
-    "back end",
-    "node",
-    "nodejs",
-    "python",
-    "php",
-    "java",
-    "django",
-    "laravel"
+
+  backend: [
+    'backend',
+    'back end',
+    'مطور خلفي',
+    'node',
+    'nodejs',
+    'python',
+    'php',
+    'java',
+    'django',
+    'laravel'
   ],
-  "backend": [
-    "مطور خلفي",
-    "backend",
-    "back end",
-    "node",
-    "nodejs",
-    "python",
-    "php",
-    "java",
-    "django",
-    "laravel"
+
+  'مطور خلفي': [
+    'backend',
+    'back end',
+    'مطور خلفي',
+    'node',
+    'nodejs',
+    'python',
+    'php',
+    'java',
+    'django',
+    'laravel'
   ],
-  "مصمم": [
-    "مصمم",
-    "تصميم",
-    "designer",
-    "design",
-    "graphic designer",
-    "ui",
-    "ux",
-    "figma",
-    "photoshop"
+
+  مصمم: [
+    'مصمم',
+    'تصميم',
+    'designer',
+    'design',
+    'graphic designer',
+    'ui',
+    'ux',
+    'figma',
+    'photoshop'
   ],
-  "designer": [
-    "مصمم",
-    "تصميم",
-    "designer",
-    "design",
-    "graphic designer",
-    "ui",
-    "ux",
-    "figma",
-    "photoshop"
+
+  designer: [
+    'مصمم',
+    'تصميم',
+    'designer',
+    'design',
+    'graphic designer',
+    'ui',
+    'ux',
+    'figma',
+    'photoshop'
   ],
-  "موارد بشرية": [
-    "موارد بشرية",
-    "hr",
-    "human resources",
-    "recruiter",
-    "recruitment",
-    "talent acquisition"
+
+  'موارد بشرية': [
+    'موارد بشرية',
+    'hr',
+    'human resources',
+    'recruiter',
+    'recruitment',
+    'talent acquisition'
   ],
-  "hr": [
-    "موارد بشرية",
-    "hr",
-    "human resources",
-    "recruiter",
-    "recruitment",
-    "talent acquisition"
+
+  hr: [
+    'موارد بشرية',
+    'hr',
+    'human resources',
+    'recruiter',
+    'recruitment',
+    'talent acquisition'
   ],
-  "مبيعات": [
-    "مبيعات",
-    "sales",
-    "sales representative",
-    "sales executive",
-    "business development"
+
+  مبيعات: [
+    'مبيعات',
+    'sales',
+    'sales representative',
+    'sales executive',
+    'business development'
   ],
-  "sales": [
-    "مبيعات",
-    "sales",
-    "sales representative",
-    "sales executive",
-    "business development"
+
+  sales: [
+    'مبيعات',
+    'sales',
+    'sales representative',
+    'sales executive',
+    'business development'
   ],
-  "تسويق": [
-    "تسويق",
-    "marketing",
-    "digital marketing",
-    "social media",
-    "seo",
-    "content creator"
+
+  تسويق: [
+    'تسويق',
+    'marketing',
+    'digital marketing',
+    'social media',
+    'seo',
+    'content creator'
   ],
-  "marketing": [
-    "تسويق",
-    "marketing",
-    "digital marketing",
-    "social media",
-    "seo",
-    "content creator"
+
+  marketing: [
+    'تسويق',
+    'marketing',
+    'digital marketing',
+    'social media',
+    'seo',
+    'content creator'
   ],
-  "إداري": [
-    "إداري",
-    "إدارة",
-    "administration",
-    "administrative",
-    "office manager",
-    "business administration"
+
+  إداري: [
+    'إداري',
+    'إدارة',
+    'administration',
+    'administrative',
+    'office manager',
+    'business administration'
   ],
-  "administration": [
-    "إداري",
-    "إدارة",
-    "administration",
-    "administrative",
-    "office manager",
-    "business administration"
+
+  administration: [
+    'إداري',
+    'إدارة',
+    'administration',
+    'administrative',
+    'office manager',
+    'business administration'
   ],
-  "مدير": [
-    "مدير",
-    "إدارة",
-    "manager",
-    "management",
-    "project manager",
-    "operations manager"
+
+  مدير: [
+    'مدير',
+    'إدارة',
+    'manager',
+    'management',
+    'project manager',
+    'operations manager'
   ],
-  "manager": [
-    "مدير",
-    "إدارة",
-    "manager",
-    "management",
-    "project manager",
-    "operations manager"
+
+  manager: [
+    'مدير',
+    'إدارة',
+    'manager',
+    'management',
+    'project manager',
+    'operations manager'
   ],
-  "خدمة عملاء": [
-    "خدمة عملاء",
-    "customer service",
-    "customer support",
-    "call center",
-    "دعم العملاء"
+
+  مهندس: [
+    'مهندس',
+    'هندسة',
+    'engineer',
+    'engineering',
+    'civil engineer',
+    'mechanical engineer',
+    'electrical engineer'
   ],
-  "customer service": [
-    "خدمة عملاء",
-    "customer service",
-    "customer support",
-    "call center",
-    "دعم العملاء"
+
+  engineer: [
+    'مهندس',
+    'هندسة',
+    'engineer',
+    'engineering',
+    'civil engineer',
+    'mechanical engineer',
+    'electrical engineer'
   ],
-  "مهندس": [
-    "مهندس",
-    "هندسة",
-    "engineer",
-    "engineering",
-    "civil engineer",
-    "mechanical engineer",
-    "electrical engineer"
+
+  ممرض: [
+    'ممرض',
+    'تمريض',
+    'nurse',
+    'nursing',
+    'medical',
+    'healthcare'
   ],
-  "engineer": [
-    "مهندس",
-    "هندسة",
-    "engineer",
-    "engineering",
-    "civil engineer",
-    "mechanical engineer",
-    "electrical engineer"
+
+  nurse: [
+    'ممرض',
+    'تمريض',
+    'nurse',
+    'nursing',
+    'medical',
+    'healthcare'
   ],
-  "ممرض": [
-    "ممرض",
-    "تمريض",
-    "nurse",
-    "nursing",
-    "medical",
-    "healthcare"
+
+  'خدمة عملاء': [
+    'خدمة عملاء',
+    'customer service',
+    'customer support',
+    'call center',
+    'دعم العملاء'
   ],
-  "nurse": [
-    "ممرض",
-    "تمريض",
-    "nurse",
-    "nursing",
-    "medical",
-    "healthcare"
+
+  'customer service': [
+    'خدمة عملاء',
+    'customer service',
+    'customer support',
+    'call center',
+    'دعم العملاء'
   ]
 };
 
 function normalizeText(value) {
-  return String(value || "")
+  return String(value || '')
     .toLowerCase()
-    .replace(/[أإآ]/g, "ا")
-    .replace(/ى/g, "ي")
-    .replace(/ة/g, "ه")
-    .replace(/ـ/g, "")
-    .replace(/[^\u0600-\u06FFa-z0-9+#.\s/-]/g, " ")
-    .replace(/\s+/g, " ")
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .replace(/ـ/g, '')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -264,24 +293,28 @@ function unique(values) {
   return [...new Set(values.filter(Boolean))];
 }
 
-function splitTerms(value) {
+function splitSkills(value) {
   if (Array.isArray(value)) {
     return unique(value.map(normalizeText));
   }
 
   return unique(
-    String(value || "")
+    String(value || '')
       .split(/[،,|;/]+/)
       .map(normalizeText)
       .filter(Boolean)
   );
 }
 
-function getTranslatedKeywords(query) {
+function getSearchKeywords(query) {
   const normalizedQuery = normalizeText(query);
-  if (!normalizedQuery) return [];
+
+  if (!normalizedQuery) {
+    return [];
+  }
 
   const keywords = new Set();
+
   keywords.add(normalizedQuery);
 
   normalizedQuery
@@ -289,14 +322,16 @@ function getTranslatedKeywords(query) {
     .filter(word => word.length > 1)
     .forEach(word => keywords.add(word));
 
-  Object.entries(TRANSLATION_MAP).forEach(([key, synonyms]) => {
+  Object.entries(TRANSLATION_MAP).forEach(([key, terms]) => {
     const normalizedKey = normalizeText(key);
 
     if (
       normalizedQuery.includes(normalizedKey) ||
       normalizedKey.includes(normalizedQuery)
     ) {
-      synonyms.forEach(synonym => keywords.add(normalizeText(synonym)));
+      terms.forEach(term => {
+        keywords.add(normalizeText(term));
+      });
     }
   });
 
@@ -307,91 +342,115 @@ function textContains(text, term) {
   const normalizedText = normalizeText(text);
   const normalizedTerm = normalizeText(term);
 
-  if (!normalizedText || !normalizedTerm) return false;
-  if (normalizedText.includes(normalizedTerm)) return true;
+  if (!normalizedText || !normalizedTerm) {
+    return false;
+  }
 
-  const termWords = normalizedTerm.split(" ").filter(word => word.length > 2);
-  if (termWords.length > 1) {
-    return termWords.every(word => normalizedText.includes(word));
+  if (normalizedText.includes(normalizedTerm)) {
+    return true;
+  }
+
+  const words = normalizedTerm
+    .split(' ')
+    .filter(word => word.length > 2);
+
+  if (words.length > 1) {
+    return words.every(word => normalizedText.includes(word));
   }
 
   return false;
 }
 
-function candidateSkills(candidate) {
-  return splitTerms(candidate.skills);
-}
-
 function calculateMatch(candidate, criteria) {
   const requestedTitle = normalizeText(criteria.jobtitle);
   const requestedCity = normalizeText(criteria.city);
-  const requestedSkills = splitTerms(criteria.skills);
-  const minExperience = Math.max(0, Number(criteria.minexperience || 0));
+  const requestedSkills = splitSkills(criteria.skills);
+  const requiredExperience = Math.max(
+    0,
+    Number(criteria.minexperience || 0)
+  );
 
-  const jobTitle = normalizeText(candidate.jobtitle);
-  const education = normalizeText(candidate.education);
-  const candidateSkillItems = candidateSkills(candidate);
-  const candidateSkillText = candidateSkillItems.join(" ");
-  const candidateText = [jobTitle, education, candidateSkillText].join(" ");
-  const translatedKeywords = getTranslatedKeywords(requestedTitle);
+  const candidateJobTitle = normalizeText(candidate.jobtitle);
+  const candidateEducation = normalizeText(candidate.education);
+  const candidateSkills = splitSkills(candidate.skills);
 
-  let titleScore = 0;
+  const candidateText = [
+    candidateJobTitle,
+    candidateEducation,
+    candidateSkills.join(' ')
+  ].join(' ');
+
+  let jobScore = 0;
   let skillsScore = 0;
   let experienceScore = 0;
   let cityScore = 0;
   let titleMatched = false;
 
-  /* 50 نقطة لتوافق الوظيفة والمسميات والمرادفات */
+  /*
+    50 نقطة للمسمى الوظيفي.
+  */
   if (!requestedTitle) {
-    titleScore = 25;
+    jobScore = 25;
     titleMatched = true;
-  } else if (textContains(jobTitle, requestedTitle)) {
-    titleScore = 50;
+  } else if (textContains(candidateJobTitle, requestedTitle)) {
+    jobScore = 50;
     titleMatched = true;
   } else {
-    const matches = translatedKeywords.filter(keyword =>
-      textContains(candidateText, keyword)
-    );
+    const keywords = getSearchKeywords(requestedTitle);
 
-    if (matches.length >= 3) {
-      titleScore = 46;
+    const matchedKeywords = keywords.filter(keyword => {
+      return textContains(candidateText, keyword);
+    });
+
+    if (matchedKeywords.length >= 3) {
+      jobScore = 46;
       titleMatched = true;
-    } else if (matches.length === 2) {
-      titleScore = 40;
+    } else if (matchedKeywords.length === 2) {
+      jobScore = 40;
       titleMatched = true;
-    } else if (matches.length === 1) {
-      titleScore = 30;
+    } else if (matchedKeywords.length === 1) {
+      jobScore = 30;
       titleMatched = true;
     }
   }
 
-  /* إذا أدخل المستخدم مسمى وظيفة ولا يوجد أي توافق، لا نعرض المرشح */
+  /*
+    لو المستخدم كتب وظيفة ولا يوجد تطابق وظيفي نهائياً:
+    لا نعرض المرشح.
+  */
   if (requestedTitle && !titleMatched) {
     return {
       percentage: 0,
       matched: false,
       matchedSkills: [],
-      titleScore: 0,
-      skillsScore: 0,
-      experienceScore: 0,
-      cityScore: 0
+      breakdown: {
+        job: 0,
+        skills: 0,
+        experience: 0,
+        city: 0
+      }
     };
   }
 
-  /* 25 نقطة لتوافق المهارات */
+  /*
+    25 نقطة للمهارات.
+  */
   const matchedSkills = [];
-  if (requestedSkills.length === 0) {
+
+  if (!requestedSkills.length) {
     skillsScore = 15;
   } else {
     requestedSkills.forEach(requestedSkill => {
-      const skillMatch = candidateSkillItems.some(candidateSkill => {
+      const exists = candidateSkills.some(candidateSkill => {
         return (
           textContains(candidateSkill, requestedSkill) ||
           textContains(requestedSkill, candidateSkill)
         );
       });
 
-      if (skillMatch) matchedSkills.push(requestedSkill);
+      if (exists) {
+        matchedSkills.push(requestedSkill);
+      }
     });
 
     skillsScore = Math.round(
@@ -399,23 +458,27 @@ function calculateMatch(candidate, criteria) {
     );
   }
 
-  /* 15 نقطة للخبرة */
+  /*
+    15 نقطة للخبرة.
+  */
   const candidateExperience = Math.max(
     0,
     Number(candidate.yearsofexperience || 0)
   );
 
-  if (minExperience === 0) {
+  if (!requiredExperience) {
     experienceScore = 15;
-  } else if (candidateExperience >= minExperience) {
+  } else if (candidateExperience >= requiredExperience) {
     experienceScore = 15;
   } else {
     experienceScore = Math.round(
-      (candidateExperience / minExperience) * 15
+      (candidateExperience / requiredExperience) * 15
     );
   }
 
-  /* 10 نقاط للمدينة */
+  /*
+    10 نقاط للمدينة.
+  */
   if (!requestedCity) {
     cityScore = 10;
   } else if (textContains(candidate.city, requestedCity)) {
@@ -424,19 +487,23 @@ function calculateMatch(candidate, criteria) {
 
   const percentage = Math.min(
     100,
-    Math.round(titleScore + skillsScore + experienceScore + cityScore)
+    Math.round(jobScore + skillsScore + experienceScore + cityScore)
   );
 
   return {
     percentage,
     matched: percentage >= 40,
     matchedSkills,
-    titleScore,
-    skillsScore,
-    experienceScore,
-    cityScore
+    breakdown: {
+      job: jobScore,
+      skills: skillsScore,
+      experience: experienceScore,
+      city: cityScore
+    }
   };
 }
+
+/* محتوى الصفحة الرئيسية */
 
 async function handleContent(req, res) {
   const { data, error } = await db()
@@ -445,13 +512,17 @@ async function handleContent(req, res) {
     .eq('id', 1)
     .single();
 
-  if (error && error.code !== 'PGRST116') throw error;
+  if (error && error.code !== 'PGRST116') {
+    throw error;
+  }
 
   return reply(res, 200, {
     ok: true,
     content: data || defaults
   });
 }
+
+/* المقالات */
 
 async function handleArticles(req, res) {
   const slug = req.query.slug;
@@ -466,8 +537,11 @@ async function handleArticles(req, res) {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        return reply(res, 404, { detail: 'المقال غير موجود' });
+        return reply(res, 404, {
+          detail: 'المقال غير موجود'
+        });
       }
+
       throw error;
     }
 
@@ -481,9 +555,13 @@ async function handleArticles(req, res) {
     .from('articles')
     .select('id, slug, title, excerpt, cover_image, published_at, author_name, tags')
     .eq('published', true)
-    .order('published_at', { ascending: false });
+    .order('published_at', {
+      ascending: false
+    });
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
   return reply(res, 200, {
     ok: true,
@@ -491,14 +569,20 @@ async function handleArticles(req, res) {
   });
 }
 
+/* آراء العملاء */
+
 async function handleTestimonials(req, res) {
   const { data, error } = await db()
     .from('testimonials')
     .select('id, author_name, author_role, company_name, content, rating, avatar_url')
     .eq('published', true)
-    .order('created_at', { ascending: false });
+    .order('created_at', {
+      ascending: false
+    });
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
   return reply(res, 200, {
     ok: true,
@@ -506,15 +590,28 @@ async function handleTestimonials(req, res) {
   });
 }
 
+/* الإحصائيات */
+
 async function handleStats(req, res) {
   const [
     { count: totalClients },
     { count: totalCandidates },
     { count: totalPlacements }
   ] = await Promise.all([
-    db().from('clients').select('*', { count: 'exact', head: true }),
-    db().from('candidates').select('*', { count: 'exact', head: true }),
-    db().from('placements').select('*', { count: 'exact', head: true })
+    db().from('clients').select('*', {
+      count: 'exact',
+      head: true
+    }),
+
+    db().from('candidates').select('*', {
+      count: 'exact',
+      head: true
+    }),
+
+    db().from('placements').select('*', {
+      count: 'exact',
+      head: true
+    })
   ]);
 
   return reply(res, 200, {
@@ -528,13 +625,8 @@ async function handleStats(req, res) {
   });
 }
 
-/*
-  بحث ذكي باللغتين العربية والإنجليزية.
-  أمثلة:
-  - محاسب => accountant / accounting / finance
-  - developer => مطور / مبرمج / software developer
-  - مبيعات => sales / business development
-*/
+/* البحث الذكي عن المرشحين */
+
 async function handleCandidatesSearch(req, res) {
   const { client } = await requireClient(req);
 
@@ -547,8 +639,8 @@ async function handleCandidatesSearch(req, res) {
   );
 
   /*
-    أسماء الأعمدة أدناه مطابقة للـ candidates schema الفعلي:
-    fullname, jobtitle, yearsofexperience, resumeurl
+    أسماء أعمدة candidates الحقيقية:
+    fullname / jobtitle / yearsofexperience / resumeurl
   */
   const { data: candidates, error } = await db()
     .from('candidates')
@@ -570,10 +662,14 @@ async function handleCandidatesSearch(req, res) {
       status
     `)
     .eq('status', 'active')
-    .order('yearsofexperience', { ascending: false })
+    .order('yearsofexperience', {
+      ascending: false
+    })
     .limit(250);
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
   const criteria = {
     jobtitle,
@@ -597,15 +693,10 @@ async function handleCandidatesSearch(req, res) {
         yearsofexperience: candidate.yearsofexperience || 0,
         education: candidate.education || '',
         expected_salary: candidate.expectedsalary || null,
-        skills: candidateSkills(candidate),
+        skills: splitSkills(candidate.skills),
         match_percentage: match.percentage,
         matched_skills: match.matchedSkills,
-        match_breakdown: {
-          job_title: match.titleScore,
-          skills: match.skillsScore,
-          experience: match.experienceScore,
-          city: match.cityScore
-        },
+        match_breakdown: match.breakdown,
         has_cv: Boolean(candidate.resumeurl)
       };
     })
@@ -615,7 +706,10 @@ async function handleCandidatesSearch(req, res) {
         return b.match_percentage - a.match_percentage;
       }
 
-      return Number(b.yearsofexperience || 0) - Number(a.yearsofexperience || 0);
+      return (
+        Number(b.yearsofexperience || 0) -
+        Number(a.yearsofexperience || 0)
+      );
     });
 
   return reply(res, 200, {
@@ -627,14 +721,23 @@ async function handleCandidatesSearch(req, res) {
       skills,
       minexperience
     },
-    client_credits: Number(client.credits_balance || 0),
+
+    /*
+      الاسم هنا مطابق للعمود الذي أرسلته:
+      credeits_balance
+    */
+    client_credits: Number(client.credeits_balance || 0),
+
     candidates: results
   });
 }
 
+/* طلب سيرة ذاتية */
+
 async function handleCandidateRequest(req, res) {
   const { client } = await requireClient(req);
   const body = readBody(req);
+
   const candidateId = body.candidate_id;
 
   if (!candidateId) {
@@ -671,11 +774,6 @@ async function handleCandidateRequest(req, res) {
     });
   }
 
-  /*
-    هذا الجزء يفترض cv_requests schema القديم الذي أرسلته:
-    full_name, experience_years, cv_url, skills.
-    إذا كان جدول cv_requests عندك بأسماء snake_case مختلفة، أرسل أعمدته.
-  */
   const { data: requestRow, error: requestError } = await db()
     .from('cv_requests')
     .insert({
@@ -686,32 +784,48 @@ async function handleCandidateRequest(req, res) {
       phone: candidate.phone,
       city: candidate.city,
       experience_years: candidate.yearsofexperience || 0,
-      skills: candidateSkills(candidate),
+      skills: splitSkills(candidate.skills),
       cv_url: candidate.resumeurl,
       status: 'pending'
     })
     .select()
     .single();
 
-  if (requestError) throw requestError;
+  if (requestError) {
+    throw requestError;
+  }
 
   return reply(res, 200, {
     ok: true,
-    detail: 'تم إرسال طلب السيرة الذاتية بنجاح، وسيظهر في لوحة الإدارة.',
+    detail: 'تم إرسال طلب السيرة الذاتية بنجاح.',
     request: requestRow
   });
 }
+
+/* طلبات الشركة السابقة */
 
 async function handleMyRequests(req, res) {
   const { client } = await requireClient(req);
 
   const { data, error } = await db()
     .from('cv_requests')
-    .select('id, full_name, city, experience_years, status, created_at, candidate_id')
+    .select(`
+      id,
+      full_name,
+      city,
+      experience_years,
+      status,
+      created_at,
+      candidate_id
+    `)
     .eq('client_id', client.id)
-    .order('created_at', { ascending: false });
+    .order('created_at', {
+      ascending: false
+    });
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
   return reply(res, 200, {
     ok: true,
@@ -719,19 +833,42 @@ async function handleMyRequests(req, res) {
   });
 }
 
+/* Router */
+
 module.exports = async (req, res) => {
   try {
     const resource = req.query.resource;
 
-    if (resource === 'content') return await handleContent(req, res);
-    if (resource === 'articles') return await handleArticles(req, res);
-    if (resource === 'testimonials') return await handleTestimonials(req, res);
-    if (resource === 'stats') return await handleStats(req, res);
-    if (resource === 'candidates') return await handleCandidatesSearch(req, res);
-    if (resource === 'request-candidate' && req.method === 'POST') {
+    if (resource === 'content') {
+      return await handleContent(req, res);
+    }
+
+    if (resource === 'articles') {
+      return await handleArticles(req, res);
+    }
+
+    if (resource === 'testimonials') {
+      return await handleTestimonials(req, res);
+    }
+
+    if (resource === 'stats') {
+      return await handleStats(req, res);
+    }
+
+    if (resource === 'candidates') {
+      return await handleCandidatesSearch(req, res);
+    }
+
+    if (
+      resource === 'request-candidate' &&
+      req.method === 'POST'
+    ) {
       return await handleCandidateRequest(req, res);
     }
-    if (resource === 'my-requests') return await handleMyRequests(req, res);
+
+    if (resource === 'my-requests') {
+      return await handleMyRequests(req, res);
+    }
 
     return reply(res, 400, {
       detail: 'مورد غير معروف'
