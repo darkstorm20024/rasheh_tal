@@ -1,120 +1,1790 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="رَشّح — منصة التوظيف الذكية للشركات والمرشحين.">
   <title>رَشّح — منصة التوظيف الذكية</title>
+
   <link rel="icon" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
   <style>
     :root {
-      --blue: #3b82f6;
-      --blue-dark: #2563eb;
-      --blue-light: #dbeafe;
-      --bg: #f8fafc;
-      --white: #ffffff;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-light: #dbeafe;
+      --background: #f8fafc;
+      --surface: #ffffff;
       --text: #0f172a;
       --muted: #64748b;
       --border: #e2e8f0;
-      --dark: #0f172a;
+      --footer: #0f172a;
+      --footer-card: #1e293b;
       --radius: 16px;
-      --shadow: 0 1px 3px rgba(15, 23, 42, .08), 0 1px 2px rgba(15, 23, 42, .04);
-      --shadow-lg: 0 18px 42px rgba(15, 23, 42, .14);
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 18px 42px rgba(15, 23, 42, 0.14);
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; font-family: Cairo, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
-    a { color: inherit; text-decoration: none; }
-    button, input { font-family: inherit; }
-    .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
-    .hidden { display: none !important; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Cairo", Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hidden {
+      display: none !important;
+    }
 
     /* Header */
-    .header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
-    .header-inner { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .logo { font-size: 1.55rem; color: var(--blue); font-weight: 900; }
-    .logo img { width: 138px; height: 54px; object-fit: contain; display: block; }
-    .nav { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
-    .nav-link { display: inline-block; padding: 9px 12px; border-radius: 9px; color: var(--muted); font-size: .89rem; font-weight: 700; }
-    .nav-link:hover { color: var(--blue); background: var(--blue-light); }
-    #authButtons { display: flex; gap: 8px; align-items: center; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.97);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      color: var(--primary);
+      font-size: 1.6rem;
+      font-weight: 900;
+    }
+
+    .logo img {
+      display: block;
+      width: 140px;
+      height: 58px;
+      object-fit: contain;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .nav-link {
+      display: inline-block;
+      padding: 9px 12px;
+      color: var(--muted);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .nav-link:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    #authButtons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
     /* Buttons */
-    .btn { border: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 11px; padding: 11px 18px; font-size: .88rem; font-weight: 800; transition: .2s; }
-    .btn:hover { transform: translateY(-1px); }
-    .btn-primary { background: var(--blue); color: white; box-shadow: 0 6px 16px rgba(59,130,246,.26); }
-    .btn-primary:hover { background: var(--blue-dark); }
-    .btn-outline { background: white; border: 1.5px solid var(--blue); color: var(--blue); }
-    .btn-outline:hover { background: var(--blue); color: white; }
-    .btn-ghost { background: transparent; color: var(--text); }
-    .btn-ghost:hover { background: #f1f5f9; color: var(--blue); }
-    .btn-large { padding: 15px 27px; font-size: 1rem; }
-    .btn-small { padding: 8px 12px; font-size: .8rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      border: 0;
+      border-radius: 11px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+    }
+
+    .btn-ghost:hover {
+      background: #f1f5f9;
+      color: var(--primary);
+    }
+
+    .btn-large {
+      padding: 15px 28px;
+      font-size: 1rem;
+    }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
 
     /* Hero */
-    .hero { min-height: 570px; display: flex; align-items: center; text-align: center; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 2%, #dbeafe 0, transparent 48%); }
-    .hero::before { content: ''; position: absolute; top: -260px; right: -180px; width: 560px; height: 560px; border-radius: 50%; background: rgba(59,130,246,.08); }
-    .hero::after { content: ''; position: absolute; bottom: -260px; left: -150px; width: 450px; height: 450px; border-radius: 50%; background: rgba(96,165,250,.08); }
-    .hero-content { position: relative; z-index: 1; width: 100%; padding: 80px 0; }
-    .eyebrow { display: inline-block; margin-bottom: 18px; padding: 7px 15px; border: 1px solid #bfdbfe; border-radius: 999px; background: #eff6ff; color: var(--blue); font-size: .8rem; font-weight: 800; }
-    .hero h1 { max-width: 930px; margin: 0 auto; font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; line-height: 1.22; }
-    .hero h1 .blue { color: var(--blue); }
-    .hero p { max-width: 720px; margin: 20px auto 32px; color: var(--muted); font-size: 1.1rem; }
-    .hero-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
-    /* Sections */
-    section { padding: 78px 0; }
-    .section-head { max-width: 710px; margin: 0 auto 40px; text-align: center; }
-    .section-head h2 { margin: 0 0 10px; font-size: clamp(1.65rem, 3vw, 2.35rem); line-height: 1.35; font-weight: 900; }
-    .section-head p { margin: 0; color: var(--muted); }
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 570px;
+      overflow: hidden;
+      text-align: center;
+      background: radial-gradient(circle at 50% 5%, #dbeafe 0, transparent 48%);
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      border-radius: 50%;
+      content: "";
+      pointer-events: none;
+    }
+
+    .hero::before {
+      top: -280px;
+      right: -190px;
+      width: 560px;
+      height: 560px;
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .hero::after {
+      bottom: -270px;
+      left: -150px;
+      width: 450px;
+      height: 450px;
+      background: rgba(96, 165, 250, 0.08);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding: 80px 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 7px 15px;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      max-width: 940px;
+      margin: 0 auto;
+      font-size: clamp(2.05rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.22;
+    }
+
+    .hero h1 .accent {
+      color: var(--primary);
+    }
+
+    .hero-text {
+      max-width: 720px;
+      margin: 20px auto 33px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Generic sections */
+
+    section {
+      padding: 78px 0;
+    }
+
+    .section-head {
+      max-width: 710px;
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 3vw, 2.35rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+    }
 
     /* Features */
-    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-    .feature-card { padding: 27px 24px; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
-    .feature-icon { width: 52px; height: 52px; display: grid; place-items: center; margin-bottom: 16px; border-radius: 14px; background: var(--blue-light); color: var(--blue); font-size: 1.38rem; }
-    .feature-card h3 { margin: 0 0 8px; font-size: 1.02rem; font-weight: 900; }
-    .feature-card p { margin: 0; color: var(--muted); font-size: .88rem; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .feature-card {
+      padding: 27px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: 0.25s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+      display: grid;
+      width: 52px;
+      height: 52px;
+      margin-bottom: 16px;
+      border-radius: 14px;
+      place-items: center;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 1.35rem;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+      font-weight: 900;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
 
     /* Stats */
-    .stats { padding: 52px 0; background: white; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; text-align: center; }
-    .stat-number { display: block; color: var(--blue); font-size: clamp(2rem,4vw,2.9rem); font-weight: 900; line-height: 1.2; }
-    .stat-label { color: var(--muted); font-size: .86rem; font-weight: 700; }
 
-    /* Cards */
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .article-card, .testimonial-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: white; box-shadow: var(--shadow); }
-    .article-cover { height: 150px; background: linear-gradient(135deg,#dbeafe,#bfdbfe); }
-    .article-cover img { width: 100%; height: 150px; object-fit: cover; display: block; }
-    .article-content { padding: 19px; }
-    .tag { display: inline-block; padding: 3px 10px; margin-bottom: 8px; border-radius: 999px; background: var(--blue-light); color: var(--blue); font-size: .7rem; font-weight: 800; }
-    .article-content h3 { margin: 0 0 7px; font-size: 1rem; line-height: 1.55; font-weight: 900; }
-    .article-content p { margin: 0; color: var(--muted); font-size: .84rem; }
-    .testimonials { background: white; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .testimonial-card { padding: 23px; background: var(--bg); }
-    .stars { color: #f59e0b; margin-bottom: 10px; letter-spacing: 2px; }
-    .testimonial-text { min-height: 72px; margin: 0 0 17px; font-size: .9rem; }
-    .author { display: flex; align-items: center; gap: 10px; }
-    .avatar { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: var(--blue-light); color: var(--blue); font-weight: 900; }
-    .author strong { display: block; font-size: .85rem; }.author span { color: var(--muted); font-size: .75rem; }
-    .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 25px; }
+    .stats-section {
+      padding: 52px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      text-align: center;
+    }
+
+    .stat-number {
+      display: block;
+      color: var(--primary);
+      font-size: clamp(2rem, 4vw, 2.9rem);
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    /* Article + testimonial cards */
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .article-card,
+    .testimonial-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .article-cover {
+      height: 150px;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    }
+
+    .article-cover img {
+      display: block;
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .article-content {
+      padding: 19px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+
+    .article-content h3 {
+      margin: 0 0 7px;
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.55;
+    }
+
+    .article-content p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .testimonials-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .testimonial-card {
+      padding: 23px;
+      background: var(--background);
+    }
+
+    .stars {
+      margin-bottom: 10px;
+      color: #f59e0b;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-text {
+      min-height: 72px;
+      margin: 0 0 17px;
+      font-size: 0.9rem;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      place-items: center;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 900;
+    }
+
+    .testimonial-author strong {
+      display: block;
+      font-size: 0.85rem;
+    }
+
+    .testimonial-author span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .empty-message {
+      grid-column: 1 / -1;
+      padding: 25px;
+      color: var(--muted);
+      text-align: center;
+    }
 
     /* CTA */
-    .cta { padding: 80px 0; }
-    .cta-card { padding: 60px 24px; border-radius: 22px; text-align: center; color: white; background: linear-gradient(135deg,#2563eb,#1e3a8a); box-shadow: var(--shadow-lg); }
-    .cta-card h2 { margin: 0; font-size: clamp(1.65rem,3vw,2.4rem); font-weight: 900; }.cta-card p { max-width: 630px; margin: 12px auto 24px; opacity: .92; }.cta-card .btn { background: white; color: var(--blue); }
+
+    .cta-section {
+      padding: 80px 0;
+    }
+
+    .cta-card {
+      padding: 60px 24px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #2563eb, #1e3a8a);
+      color: #ffffff;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .cta-card h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 900;
+    }
+
+    .cta-card p {
+      max-width: 630px;
+      margin: 12px auto 24px;
+      opacity: 0.92;
+    }
+
+    .cta-card .btn {
+      background: #ffffff;
+      color: var(--primary);
+    }
 
     /* Footer */
-    footer { padding: 60px 0 24px; background: var(--dark); color: #94a3b8; }
-    .footer-grid { display: grid; grid-template-columns: 1.45fr 1fr 1fr 1.22fr; gap: 30px; }
-    .footer-logo img { width: 138px; height: 57px; object-fit: contain; display: block; }.footer-desc { max-width: 300px; margin: 15px 0 0; font-size: .85rem; }.footer-title { margin: 8px 0 15px; color: white; font-size: .9rem; font-weight: 800; }.footer-links a { display: block; margin: 9px 0; font-size: .85rem; }.footer-links a:hover { color: white; }
-    .socials { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 17px; }.social { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 10px; background: #1e293b; color: #dbeafe; font-weight: 900; }.social:hover { background: var(--blue); }
-    .bank { padding: 15px; border-radius: 12px; background: #1e293b; font-size: .78rem; }.bank h5 { margin: 0 0 7px; color: white; font-size: .82rem; }.bank-row { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid #334155; }.bank-row:last-child { border: 0; }.bank-row span:last-child { color: white; direction: ltr; overflow-wrap: anywhere; text-align: left; }.copyright { margin-top: 35px; padding-top: 18px; border-top: 1px solid #1e293b; color: #64748b; text-align: center; font-size: .79rem; }
 
-    /* Modal */
-    .modal { display: none; position: fixed; inset: 0; z-index: 100; padding: 18px; overflow-y: auto; background: rgba(15,23,42,.74); }.modal.open { display: flex; align-items: center; justify-content: center; }.modal-box { width: min(100%, 500px); max-height: calc(100vh - 36px); overflow-y: auto; border-radius: 18px; background: white; box-shadow: var(--shadow-lg); }.modal-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; background: white; border-bottom: 1px solid var(--border); }.modal-head h3 { margin: 0; font-size: 1.1rem; font-weight: 900; }.close { border: 0; background: transparent; color: var(--muted); font-size: 1.75rem; cursor: pointer; }.modal-body { padding: 23px; }
-    .tabs { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 20px; border-bottom: 1px solid var(--border); }.tab { padding: 12px; border: 0; border-bottom: 3px solid transparent; background: white; color: var(--muted); font-weight: 900; cursor: pointer; }.tab.active { color: var(--blue); border-bottom-color: var(--blue); }.form { display: none; }.form.active { display: block; }.fiel
+    footer {
+      padding: 60px 0 24px;
+      background: var(--footer);
+      color: #94a3b8;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr 1fr 1.22fr;
+      gap: 30px;
+    }
+
+    .footer-logo img {
+      display: block;
+      width: 138px;
+      height: 57px;
+      object-fit: contain;
+    }
+
+    .footer-description {
+      max-width: 300px;
+      margin: 15px 0 0;
+      font-size: 0.85rem;
+    }
+
+    .footer-title {
+      margin: 8px 0 15px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .footer-links a {
+      display: block;
+      margin: 9px 0;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 17px;
+    }
+
+    .social-link {
+      display: grid;
+      width: 39px;
+      height: 39px;
+      border-radius: 10px;
+      place-items: center;
+      background: var(--footer-card);
+      color: #dbeafe;
+      font-weight: 900;
+      transition: 0.2s;
+    }
+
+    .social-link:hover {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .bank-box {
+      padding: 15px;
+      border-radius: 12px;
+      background: var(--footer-card);
+      font-size: 0.78rem;
+    }
+
+    .bank-box h5 {
+      margin: 0 0 7px;
+      color: #ffffff;
+      font-size: 0.82rem;
+    }
+
+    .bank-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #334155;
+    }
+
+    .bank-row:last-child {
+      border-bottom: 0;
+    }
+
+    .bank-row span:last-child {
+      overflow-wrap: anywhere;
+      color: #ffffff;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .copyright {
+      margin-top: 35px;
+      padding-top: 18px;
+      border-top: 1px solid #1e293b;
+      color: #64748b;
+      font-size: 0.79rem;
+      text-align: center;
+    }
+
+    /* Authentication modal */
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      overflow-y: auto;
+      padding: 18px;
+      background: rgba(15, 23, 42, 0.74);
+    }
+
+    .modal.open {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      width: min(100%, 500px);
+      max-height: calc(100vh - 36px);
+      overflow-y: auto;
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      position: sticky;
+      z-index: 1;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 900;
+    }
+
+    .close-modal {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.75rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 23px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .auth-tab {
+      padding: 12px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: #ffffff;
+      color: var(--muted);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .auth-tab.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .auth-form {
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+    }
+
+    .field {
+      margin-bottom: 13px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.83rem;
+      font-weight: 800;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--background);
+      font-size: 0.95rem;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+      outline: 0;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .auth-form .btn {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .form-error {
+      display: none;
+      margin-bottom: 13px;
+      padding: 10px 12px;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 0.82rem;
+    }
+
+    .form-error.show {
+      display: block;
+    }
+
+    .form-footer {
+      margin: 17px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    .form-footer a {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 200;
+      right: 20px;
+      bottom: 20px;
+      min-width: 250px;
+      max-width: 400px;
+      padding: 13px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.85rem;
+      opacity: 0;
+      transform: translateY(120px);
+      transition: 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      border-right: 4px solid #22c55e;
+    }
+
+    .toast.error {
+      border-right: 4px solid #ef4444;
+    }
+
+    @media (max-width: 980px) {
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 28px, 1180px);
+      }
+
+      .logo img {
+        width: 112px;
+      }
+
+      .main-nav > .nav-link {
+        display: none;
+      }
+
+      .features-grid,
+      .grid-3,
+      .stats-grid,
+      .footer-grid,
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-content {
+        padding: 73px 0;
+      }
+
+      .hero h1 {
+        font-size: 2.08rem;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .header-inner {
+        min-height: 72px;
+      }
+
+      .btn-small {
+        padding: 8px 10px;
+      }
+
+      .footer-grid {
+        gap: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="رَشّح">
+        <img
+          src="/rasheh-logo.png"
+          alt="رَشّح"
+          onerror="this.style.display='none';this.parentElement.textContent='رَشّح';"
+        >
+      </a>
+
+      <nav class="nav main-nav">
+        <a class="nav-link" href="#features">المميزات</a>
+        <a class="nav-link" href="/pricing.html">الباقات</a>
+        <a class="nav-link" href="#articles">المقالات</a>
+        <a class="nav-link" href="#testimonials">آراء العملاء</a>
+
+        <div id="authButtons">
+          <button class="btn btn-ghost btn-small" id="openLoginTop" type="button">
+            تسجيل الدخول
+          </button>
+
+          <button class="btn btn-primary btn-small" id="openSignupTop" type="button">
+            إنشاء حساب
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <div class="eyebrow">✦ منصة التوظيف الذكية</div>
+
+        <h1 id="heroTitle">
+          وظّف أفضل الكفاءات في ثوانٍ مع منصة
+          <span class="accent">رَشّح</span>
+          الذكية
+        </h1>
+
+        <p class="hero-text" id="heroText">
+          محرك ذكي يربط أصحاب الشركات بالكفاءات الجاهزة،
+          مع فرز دقيق وحماية كاملة لبيانات المرشحين.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-large" id="openSignupHero" type="button">
+            إنشاء حساب شركة مجاناً
+          </button>
+
+          <a class="btn btn-outline btn-large" href="/pricing.html">
+            عرض الباقات
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">لماذا رَشّح</div>
+          <h2>منصة متكاملة للتوظيف الذكي</h2>
+          <p>أدوات قوية ومصممة بعناية لتختصر وقت التوظيف وتضمن أفضل المطابقات.</p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon">⌕</div>
+            <h3>مطابقة ذكية فورية</h3>
+            <p>ابحث بالخبرات والمهارات والمسمى الوظيفي في ثوانٍ.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🛡</div>
+            <h3>حماية كاملة للبيانات</h3>
+            <p>خصوصية المرشحين والشركات أولوية في كل خطوة.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">▥</div>
+            <h3>تقارير لحظية</h3>
+            <p>تابع الطلبات وحالاتها واتخذ قرارات أسرع.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">♧</div>
+            <h3>دعم مخصص</h3>
+            <p>فريق يساعدك في رحلة التوظيف من البداية للنهاية.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="container stats-grid">
+        <div>
+          <strong class="stat-number" id="statClients">0</strong>
+          <span class="stat-label">شركة تثق بنا</span>
+        </div>
+
+        <div>
+          <strong class="stat-number" id="statCandidates">0</strong>
+          <span class="stat-label">مرشح مؤهل</span>
+        </div>
+
+        <div>
+          <strong class="stat-number" id="statPlacements">0</strong>
+          <span class="stat-label">تعيين ناجح</span>
+        </div>
+
+        <div>
+          <strong class="stat-number" id="statTime">5 أيام</strong>
+          <span class="stat-label">متوسط وقت التوظيف</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="articles">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">مدونة رَشّح</div>
+          <h2>مقالات ونصائح للتوظيف</h2>
+          <p>محتوى عملي يساعدك على بناء فريق أقوى.</p>
+        </div>
+
+        <div class="grid-3" id="articlesGrid">
+          <p class="empty-message">لا توجد مقالات منشورة حالياً.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials-section" id="testimonials">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">آراء العملاء</div>
+          <h2>ماذا يقول عملاؤنا عن رَشّح؟</h2>
+          <p>تجارب شركات اختصرت رحلة التوظيف.</p>
+        </div>
+
+        <div class="grid-3" id="testimonialsGrid">
+          <p class="empty-message">لا توجد آراء منشورة حالياً.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-card">
+          <h2>جاهز لتوظيف أفضل الكفاءات؟</h2>
+          <p>ابدأ بإنشاء حساب شركتك، ثم اختر الباقة المناسبة لاحتياجك.</p>
+          <button class="btn btn-large" id="openSignupCta" type="button">
+            إنشاء حساب شركة الآن
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="footer-logo" href="/">
+            <img
+              src="/rasheh-logo.png"
+              alt="رَشّح"
+              onerror="this.style.display='none';this.parentElement.textContent='رَشّح';"
+            >
+          </a>
+
+          <p class="footer-description">
+            منصة التوظيف الذكية التي تربط الشركات بالكفاءات المناسبة
+            بمطابقة دقيقة وحماية كاملة للبيانات.
+          </p>
+
+          <div class="socials" id="footerSocials">
+            <span style="font-size:.78rem;color:#64748b">
+              أضف روابط التواصل من لوحة الإدارة
+            </span>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4 class="footer-title">الشركة</h4>
+          <a href="#features">المميزات</a>
+          <a href="#articles">المدونة</a>
+          <a href="#testimonials">آراء العملاء</a>
+        </div>
+
+        <div class="footer-links">
+          <h4 class="footer-title">لأصحاب الشركات</h4>
+          <a href="#" id="footerSignup">إنشاء حساب</a>
+          <a href="/pricing.html">الباقات والأسعار</a>
+          <a href="/candidates.html">تصفح المرشحين</a>
+          <a href="/billing.html">حسابي والفواتير</a>
+        </div>
+
+        <div>
+          <h4 class="footer-title">معلومات الدفع</h4>
+
+          <div class="bank-box">
+            <h5>الحساب البنكي</h5>
+
+            <div class="bank-row">
+              <span>البنك</span>
+              <span id="bankName">—</span>
+            </div>
+
+            <div class="bank-row">
+              <span>اسم الحساب</span>
+              <span id="bankAccount">—</span>
+            </div>
+
+            <div class="bank-row">
+              <span>الآيبان</span>
+              <span id="bankIban">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">
+        © 2026 رَشّح. جميع الحقوق محفوظة.
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" id="authModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="authTitle">تسجيل الدخول</h3>
+        <button class="close-modal" id="closeAuthModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="loginTab" type="button">
+            تسجيل الدخول
+          </button>
+
+          <button class="auth-tab" id="signupTab" type="button">
+            إنشاء حساب جديد
+          </button>
+        </div>
+
+        <form class="auth-form active" id="loginForm">
+          <div class="form-error" id="loginError"></div>
+
+          <div class="field">
+            <label for="loginEmail">البريد الإلكتروني</label>
+            <input
+              id="loginEmail"
+              type="email"
+              required
+              autocomplete="username"
+              placeholder="company@example.com"
+            >
+          </div>
+
+          <div class="field">
+            <label for="loginPassword">كلمة المرور</label>
+            <input
+              id="loginPassword"
+              type="password"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••"
+            >
+          </div>
+
+          <button class="btn btn-primary" type="submit">
+            دخول
+          </button>
+        </form>
+
+        <form class="auth-form" id="signupForm">
+          <div class="form-error" id="signupError"></div>
+
+          <div class="field">
+            <label for="signupCompanyName">اسم الشركة</label>
+            <input
+              id="signupCompanyName"
+              type="text"
+              required
+              placeholder="اسم شركتك"
+            >
+          </div>
+
+          <div class="field">
+            <label for="signupContactName">اسم المسؤول</label>
+            <input
+              id="signupContactName"
+              type="text"
+              required
+              placeholder="الاسم الكامل"
+            >
+          </div>
+
+          <div class="field">
+            <label for="signupEmail">البريد الإلكتروني</label>
+            <input
+              id="signupEmail"
+              type="email"
+              required
+              autocomplete="username"
+              placeholder="hr@company.com"
+            >
+          </div>
+
+          <div class="field">
+            <label for="signupPhone">رقم الجوال</label>
+            <input
+              id="signupPhone"
+              type="tel"
+              required
+              placeholder="05xxxxxxxx"
+            >
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="signupPassword">كلمة المرور</label>
+              <input
+                id="signupPassword"
+                type="password"
+                required
+                minlength="8"
+                autocomplete="new-password"
+                placeholder="8 أحرف على الأقل"
+              >
+            </div>
+
+            <div class="field">
+              <label for="signupConfirmPassword">تأكيد كلمة المرور</label>
+              <input
+                id="signupConfirmPassword"
+                type="password"
+                required
+                minlength="8"
+                autocomplete="new-password"
+                placeholder="أعد كتابة كلمة المرور"
+              >
+            </div>
+          </div>
+
+          <button class="btn btn-primary" type="submit">
+            إنشاء الحساب
+          </button>
+        </form>
+
+        <p class="form-footer" id="authFooter">
+          لا تملك حساباً؟
+          <a href="#" id="authSwitchLink">إنشاء حساب جديد</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var API = "/api";
+      var token = localStorage.getItem("rasheh_token") || null;
+      var currentUser = null;
+
+      function get(id) {
+        return document.getElementById(id);
+      }
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function showToast(message, type) {
+        var toast = get("toast");
+        toast.textContent = message;
+        toast.className = "toast " + (type || "success") + " show";
+
+        setTimeout(function () {
+          toast.classList.remove("show");
+        }, 4200);
+      }
+
+      function showError(id, message) {
+        var box = get(id);
+        box.textContent = message;
+        box.classList.add("show");
+      }
+
+      function clearError(id) {
+        get(id).classList.remove("show");
+      }
+
+      async function api(path, options) {
+        options = options || {};
+
+        var headers = {
+          "Content-Type": "application/json"
+        };
+
+        if (token) {
+          headers.Authorization = "Bearer " + token;
+        }
+
+        var response = await fetch(API + path, {
+          method: options.method || "GET",
+          headers: headers,
+          body: options.body || undefined
+        });
+
+        var raw = await response.text();
+        var data;
+
+        try {
+          data = JSON.parse(raw);
+        } catch (error) {
+          data = {
+            detail: "استجابة غير صالحة من الخادم."
+          };
+        }
+
+        data.__status = response.status;
+        return data;
+      }
+
+      var authModal = get("authModal");
+      var loginTab = get("loginTab");
+      var signupTab = get("signupTab");
+      var loginForm = get("loginForm");
+      var signupForm = get("signupForm");
+
+      function openAuth(tabName) {
+        var isLogin = tabName === "login";
+
+        authModal.classList.add("open");
+
+        loginTab.classList.toggle("active", isLogin);
+        signupTab.classList.toggle("active", !isLogin);
+
+        loginForm.classList.toggle("active", isLogin);
+        signupForm.classList.toggle("active", !isLogin);
+
+        get("authTitle").textContent = isLogin
+          ? "تسجيل الدخول"
+          : "إنشاء حساب شركة";
+
+        get("authFooter").innerHTML = isLogin
+          ? 'لا تملك حساباً؟ <a href="#" id="authSwitchLink">إنشاء حساب جديد</a>'
+          : 'لديك حساب بالفعل؟ <a href="#" id="authSwitchLink">تسجيل الدخول</a>';
+
+        get("authSwitchLink").onclick = function (event) {
+          event.preventDefault();
+          openAuth(isLogin ? "signup" : "login");
+        };
+      }
+
+      function closeAuth() {
+        authModal.classList.remove("open");
+      }
+
+      loginTab.onclick = function () {
+        openAuth("login");
+      };
+
+      signupTab.onclick = function () {
+        openAuth("signup");
+      };
+
+      get("closeAuthModal").onclick = closeAuth;
+
+      authModal.onclick = function (event) {
+        if (event.target === authModal) {
+          closeAuth();
+        }
+      };
+
+      get("openLoginTop").onclick = function () {
+        openAuth("login");
+      };
+
+      get("openSignupTop").onclick = function () {
+        openAuth("signup");
+      };
+
+      get("openSignupHero").onclick = function () {
+        openAuth("signup");
+      };
+
+      get("openSignupCta").onclick = function () {
+        openAuth("signup");
+      };
+
+      get("footerSignup").onclick = function (event) {
+        event.preventDefault();
+        openAuth("signup");
+      };
+
+      loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        clearError("loginError");
+
+        var button = loginForm.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.textContent = "جاري الدخول...";
+
+        try {
+          var data = await api("/auth?action=login", {
+            method: "POST",
+            body: JSON.stringify({
+              email: get("loginEmail").value.trim(),
+              password: get("loginPassword").value
+            })
+          });
+
+          if (!data.access_token) {
+            showError(
+              "loginError",
+              data.detail || "بيانات الدخول غير صحيحة."
+            );
+            return;
+          }
+
+          token = data.access_token;
+          localStorage.setItem("rasheh_token", token);
+
+          closeAuth();
+          await loadCurrentUser();
+          showToast("تم تسجيل الدخول بنجاح.");
+        } catch (error) {
+          showError("loginError", "تعذر الاتصال بالخادم.");
+        } finally {
+          button.disabled = false;
+          button.textContent = "دخول";
+        }
+      });
+
+      signupForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        clearError("signupError");
+
+        var password = get("signupPassword").value;
+        var confirmPassword = get("signupConfirmPassword").value;
+
+        if (password.length < 8) {
+          showError(
+            "signupError",
+            "كلمة المرور يجب أن تكون 8 أحرف على الأقل."
+          );
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showError(
+            "signupError",
+            "كلمتا المرور غير متطابقتين."
+          );
+          return;
+        }
+
+        var button = signupForm.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.textContent = "جاري إنشاء الحساب...";
+
+        /*
+          هذا الـ payload مطابق تماماً لجدول clients لديك:
+          company_name
+          contact_name
+          email
+          phone
+
+          لا يوجد:
+          city
+          contact_person
+          plan
+        */
+        var payload = {
+          company_name: get("signupCompanyName").value.trim(),
+          contact_name: get("signupContactName").value.trim(),
+          email: get("signupEmail").value.trim(),
+          phone: get("signupPhone").value.trim(),
+          password: password
+        };
+
+        try {
+          var data = await api("/auth?action=register", {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+
+          if (!data.ok) {
+            showError(
+              "signupError",
+              data.detail || "فشل إنشاء حساب الشركة."
+            );
+            return;
+          }
+
+          signupForm.reset();
+          showToast(
+            "تم إنشاء الحساب بنجاح. يمكنك تسجيل الدخول الآن."
+          );
+
+          openAuth("login");
+        } catch (error) {
+          showError(
+            "signupError",
+            "تعذر الاتصال بالخادم."
+          );
+        } finally {
+          button.disabled = false;
+          button.textContent = "إنشاء الحساب";
+        }
+      });
+
+      function renderAuthButtons() {
+        var box = get("authButtons");
+
+        if (
+          currentUser &&
+          currentUser.profile &&
+          currentUser.profile.is_admin
+        ) {
+          box.innerHTML =
+            '<a class="btn btn-primary btn-small" href="/admin.html">لوحة الإدارة</a>' +
+            '<button class="btn btn-ghost btn-small" id="logoutButton" type="button">خروج</button>';
+        } else if (currentUser && currentUser.user) {
+          box.innerHTML =
+            '<a class="btn btn-primary btn-small" href="/candidates.html">تصفح المرشحين</a>' +
+            '<a class="btn btn-outline btn-small" href="/billing.html">الباقات</a>' +
+            '<button class="btn btn-ghost btn-small" id="logoutButton" type="button">خروج</button>';
+        } else {
+          box.innerHTML =
+            '<button class="btn btn-ghost btn-small" id="loginButton" type="button">تسجيل الدخول</button>' +
+            '<button class="btn btn-primary btn-small" id="signupButton" type="button">إنشاء حساب</button>';
+
+          get("loginButton").onclick = function () {
+            openAuth("login");
+          };
+
+          get("signupButton").onclick = function () {
+            openAuth("signup");
+          };
+
+          return;
+        }
+
+        get("logoutButton").onclick = function () {
+          token = null;
+          currentUser = null;
+          localStorage.removeItem("rasheh_token");
+          renderAuthButtons();
+          showToast("تم تسجيل الخروج بنجاح.");
+        };
+      }
+
+      async function loadCurrentUser() {
+        if (!token) {
+          currentUser = null;
+          renderAuthButtons();
+          return;
+        }
+
+        try {
+          var data = await api("/me");
+
+          if (data && data.user) {
+            currentUser = data;
+          } else {
+            token = null;
+            currentUser = null;
+            localStorage.removeItem("rasheh_token");
+          }
+        } catch (error) {
+          currentUser = null;
+        }
+
+        renderAuthButtons();
+      }
+
+      async function loadCms() {
+        try {
+          var data = await api("/public?resource=content");
+
+          if (!data || !data.content) {
+            return;
+          }
+
+          var content = data.content;
+
+          if (content.hero_title) {
+            var title = escapeHtml(content.hero_title);
+            title = title.replace(
+              "رَشّح",
+              '<span class="accent">رَشّح</span>'
+            );
+
+            get("heroTitle").innerHTML = title;
+          }
+
+          if (content.hero_text) {
+            get("heroText").textContent = content.hero_text;
+          }
+
+          var bank = content.bank || {};
+
+          get("bankName").textContent = bank.name || "—";
+          get("bankAccount").textContent = bank.account_name || "—";
+          get("bankIban").textContent = bank.iban || "—";
+
+          var socialBox = get("footerSocials");
+          socialBox.innerHTML = "";
+
+          var socials = content.socials || {};
+          var socialItems = [
+            ["whatsapp", "واتساب", "◉"],
+            ["linkedin", "LinkedIn", "in"],
+            ["instagram", "Instagram", "◎"],
+            ["x", "X", "𝕏"],
+            ["email", "البريد الإلكتروني", "✉"]
+          ];
+
+          socialItems.forEach(function (item) {
+            var key = item[0];
+            var label = item[1];
+            var icon = item[2];
+            var value = socials[key];
+
+            if (!value) {
+              return;
+            }
+
+            var link = document.createElement("a");
+            link.className = "social-link";
+            link.title = label;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = icon;
+
+            if (key === "email" && value.indexOf("@") !== -1) {
+              link.href = "mailto:" + value;
+            } else if (
+              key === "whatsapp" &&
+              value.indexOf("http") !== 0
+            ) {
+              link.href =
+                "https://wa.me/" +
+                String(value).replace(/[^0-9]/g, "");
+            } else {
+              link.href = value;
+            }
+
+            socialBox.appendChild(link);
+          });
+
+          if (!socialBox.children.length) {
+            socialBox.innerHTML =
+              '<span style="font-size:.78rem;color:#64748b">أضف روابط التواصل من لوحة الإدارة</span>';
+          }
+        } catch (error) {
+          /* لا نوقف الصفحة إذا فشل الـ API */
+        }
+      }
+
+      async function loadStats() {
+        try {
+          var data = await api("/public?resource=stats");
+
+          if (!data || !data.stats) {
+            return;
+          }
+
+          get("statClients").textContent =
+            data.stats.totalClients || 0;
+
+          get("statCandidates").textContent =
+            data.stats.totalCandidates || 0;
+
+          get("statPlacements").textContent =
+            data.stats.totalPlacements || 0;
+
+          get("statTime").textContent =
+            data.stats.avgTimeToHire || "5 أيام";
+        } catch (error) {
+          /* تظل الأرقام الافتراضية ظاهرة */
+        }
+      }
+
+      async function loadArticles() {
+        try {
+          var data = await api("/public?resource=articles");
+          var articles = (data && data.articles) || [];
+
+          if (!articles.length) {
+            return;
+          }
+
+          get("articlesGrid").innerHTML = articles
+            .slice(0, 6)
+            .map(function (article) {
+              var cover = article.cover_image
+                ? '<div class="article-cover"><img src="' +
+                  escapeHtml(article.cover_image) +
+                  '" alt=""></div>'
+                : '<div class="article-cover"></div>';
+
+              var tag =
+                article.tags && article.tags[0]
+                  ? '<span class="tag">' +
+                    escapeHtml(article.tags[0]) +
+                    "</span>"
+                  : "";
+
+              return (
+                '<article class="article-card">' +
+                cover +
+                '<div class="article-content">' +
+                tag +
+                "<h3>" +
+                escapeHtml(article.title) +
+                "</h3>" +
+                "<p>" +
+                escapeHtml(article.excerpt) +
+                "</p>" +
+                "</div>" +
+                "</article>"
+              );
+            })
+            .join("");
+        } catch (error) {
+          /* تظل الرسالة الافتراضية */
+        }
+      }
+
+      async function loadTestimonials() {
+        try {
+          var data = await api("/public?resource=testimonials");
+          var testimonials = (data && data.testimonials) || [];
+
+          if (!testimonials.length) {
+            return;
+          }
+
+          get("testimonialsGrid").innerHTML = testimonials
+            .slice(0, 6)
+            .map(function (item) {
+              var rating = Math.max(
+                1,
+                Math.min(5, Number(item.rating || 5))
+              );
+
+              var name = item.author_name || "عميل رَشّح";
+              var description =
+                (item.author_role || "") +
+                (item.company_name
+                  ? " — " + item.company_name
+                  : "");
+
+              return (
+                '<article class="testimonial-card">' +
+                '<div class="stars">' +
+                "★".repeat(rating) +
+                "☆".repeat(5 - rating) +
+                "</div>" +
+                '<p class="testimonial-text">“' +
+                escapeHtml(item.content) +
+                "”</p>" +
+                '<div class="testimonial-author">' +
+                '<div class="avatar">' +
+                escapeHtml(name.charAt(0)) +
+                "</div>" +
+                "<div>" +
+                "<strong>" +
+                escapeHtml(name) +
+                "</strong>" +
+                "<span>" +
+                escapeHtml(description) +
+                "</span>" +
+                "</div>" +
+                "</div>" +
+                "</article>"
+              );
+            })
+            .join("");
+        } catch (error) {
+          /* تظل الرسالة الافتراضية */
+        }
+      }
+
+      renderAuthButtons();
+      loadCurrentUser();
+      loadCms();
+      loadStats();
+      loadArticles();
+      loadTestimonials();
+    })();
+  </script>
+</body>
+</html>
