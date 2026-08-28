@@ -1,453 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>رَشّح — منصة التوظيف الذكية</title>
-<link rel="icon" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--primary:#3b82f6;--primary-light:#dbeafe;--primary-hover:#2563eb;--bg:#f8fafc;--surface:#ffffff;--text:#0f172a;--text-muted:#64748b;--border:#e2e8f0;--radius:16px;--shadow:0 1px 3px rgba(15,23,42,.06);--shadow-lg:0 10px 25px -5px rgba(15,23,42,.08);--shadow-xl:0 20px 40px -12px rgba(15,23,42,.15)}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Cairo',system-ui,sans-serif;line-height:1.7;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.container{max-width:1280px;margin:0 auto;padding:0 24px}
-header{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:50}
-.header-inner{display:flex;justify-content:space-between;align-items:center;gap:16px}
-.logo img{width:145px;height:64px;object-fit:contain}
-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.nav-link{padding:10px 18px;border-radius:10px;font-weight:600;color:var(--text-muted);font-size:.95rem;background:none;border:none;cursor:pointer;font-family:inherit}
-.nav-link:hover{background:var(--primary-light);color:var(--primary)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 28px;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer;border:none;font-family:inherit}
-.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(59,130,246,.3)}
-.btn-primary:hover{background:var(--primary-hover)}
-.btn-ghost{background:transparent;color:var(--text)}
-.btn-ghost:hover{background:#f1f5f9;color:var(--primary)}
-.btn-outline{background:transparent;color:var(--primary);border:2px solid var(--primary)}
-.btn-outline:hover{background:var(--primary);color:#fff}
-.btn-lg{padding:16px 36px;font-size:1.05rem}
-.hero{padding:100px 0 120px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-60%;left:-60%;width:220%;height:220%;background:radial-gradient(ellipse at center,var(--primary-light) 0%,transparent 70%);opacity:.6}
-.hero-inner{position:relative;z-index:1}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:8px 20px;margin-bottom:24px;font-size:.9rem;font-weight:600;color:var(--primary);box-shadow:var(--shadow)}
-.hero h1{font-size:clamp(2.25rem,5.5vw,4rem);font-weight:900;line-height:1.15;margin-bottom:24px;max-width:960px;margin-inline:auto}
-.hero h1 .hl{background:linear-gradient(135deg,var(--primary),#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{font-size:clamp(1.1rem,2.2vw,1.4rem);color:var(--text-muted);margin-bottom:40px;max-width:720px;margin-inline:auto}
-.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.features{padding:90px 0}
-.features-header{text-align:center;margin-bottom:56px}
-.section-tag{display:inline-block;font-size:.85rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
-.features-header h2{font-size:clamp(1.85rem,3.5vw,2.5rem);font-weight:900;margin-bottom:16px}
-.features-header p{color:var(--text-muted);font-size:1.15rem;max-width:640px;margin:0 auto}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px 30px;box-shadow:var(--shadow)}
-.card-icon{width:54px;height:54px;background:var(--primary-light);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--primary)}
-.card h3{font-size:1.15rem;font-weight:800;margin-bottom:10px}
-.card p{color:var(--text-muted);font-size:.95rem;line-height:1.8}
-.testimonials{padding:90px 0;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px}
-.testi-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
-.testi-stars{color:#f59e0b;margin-bottom:12px;font-size:.9rem}
-.testi-content{color:var(--text);font-size:.95rem;line-height:1.8;margin-bottom:16px}
-.testi-author{display:flex;align-items:center;gap:12px}
-.testi-avatar{width:44px;height:44px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:800}
-.testi-name{font-weight:700;font-size:.9rem}
-.testi-role{color:var(--text-muted);font-size:.8rem}
-.articles{padding:90px 0}
-.articles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:48px}
-.article-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
-.article-cover{width:100%;height:170px;object-fit:cover;background:var(--primary-light)}
-.article-body{padding:22px}
-.article-tag{display:inline-block;background:var(--primary-light);color:var(--primary);font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:12px}
-.article-title{font-size:1.05rem;font-weight:800;margin-bottom:8px}
-.article-excerpt{color:var(--text-muted);font-size:.9rem;line-height:1.7}
-.stats-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:64px 0}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;text-align:center}
-.stat-value{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,var(--primary),#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.stat-label{color:var(--text-muted);font-weight:600}
-.cta-section{padding:100px 0}
-.cta-card{background:linear-gradient(145deg,var(--primary) 0%,#1d4ed8 50%,#1e3a8a 100%);border-radius:var(--radius);padding:70px 40px;text-align:center;color:#fff;box-shadow:var(--shadow-xl)}
-.cta-content{max-width:680px;margin:0 auto}
-.cta-card h2{font-size:clamp(1.85rem,4vw,2.75rem);font-weight:900;margin-bottom:16px}
-.cta-card p{font-size:1.15rem;opacity:.95;margin-bottom:28px}
-.cta-card .btn{background:#fff;color:var(--primary);padding:16px 40px}
-footer{background:#0f172a;color:#94a3b8;padding:70px 0 30px;margin-top:60px}
-.footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:40px;margin-bottom:48px}
-.footer-brand p{color:#64748b;margin-top:20px;line-height:1.8;max-width:320px;font-size:.92rem}
-.footer-col h4{color:#fff;font-size:.85rem;font-weight:700;margin-bottom:20px;text-transform:uppercase}
-.footer-col a{display:block;color:#94a3b8;margin-bottom:12px;font-size:.92rem}
-.footer-col a:hover{color:#fff}
-.socials{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
-.socials a{width:42px;height:42px;border-radius:11px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8}
-.socials a:hover{background:var(--primary);color:#fff}
-.payment-box{background:#1e293b;border-radius:12px;padding:18px 20px}
-.payment-box h5{color:#fff;font-size:.82rem;font-weight:700;margin-bottom:12px}
-.payment-row{display:flex;justify-content:space-between;font-size:.85rem;padding:6px 0;border-bottom:1px solid #29374a}
-.payment-row:last-child{border-bottom:none}
-.payment-row span:first-child{color:#64748b}
-.payment-row span:last-child{color:#e2e8f0;font-weight:600;direction:ltr;text-align:left}
-.footer-bottom{border-top:1px solid #1e293b;padding-top:28px;text-align:center;font-size:.9rem;color:#64748b}
-@media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr;gap:32px}}
-@media (max-width:560px){.footer-top{grid-template-columns:1fr}}
-.modal{position:fixed;inset:0;background:rgba(15,23,42,.85);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:.35s;padding:24px;overflow-y:auto}
-.modal.open{opacity:1;visibility:visible}
-.modal-content{background:var(--surface);border-radius:var(--radius);max-width:900px;width:100%;max-height:90vh;overflow:auto;transform:scale(.92);transition:.35s}
-.modal.open .modal-content{transform:scale(1)}
-.modal-header{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface)}
-.modal-header h3{font-size:1.15rem;font-weight:800}
-.modal-close{background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--text-muted);width:40px;height:40px;border-radius:10px}
-.video-wrapper{position:relative;width:100%;padding-top:56.25%;background:#000}
-.video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-.auth-modal .modal-content{max-width:480px}
-.auth-modal .modal-body{padding:32px}
-.auth-tabs{display:flex;margin-bottom:24px;border-bottom:1px solid var(--border)}
-.auth-tab{flex:1;padding:14px 0;font-weight:700;font-size:.95rem;color:var(--text-muted);background:none;border:none;cursor:pointer;position:relative}
-.auth-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:3px;background:var(--primary);transform:scaleX(0);transition:.25s}
-.auth-tab.active{color:var(--primary)}
-.auth-tab.active::after{transform:scaleX(1)}
-.auth-form{display:none}
-.auth-form.active{display:block}
-.form-group{margin-bottom:18px}
-.form-label{display:block;font-size:.85rem;font-weight:600;margin-bottom:8px}
-.form-input{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:12px;font-size:1rem;font-family:inherit;background:var(--bg)}
-.form-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-light);background:#fff}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.auth-submit{width:100%;padding:15px;font-size:1rem;border-radius:12px;margin-top:6px}
-.auth-footer{text-align:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);color:var(--text-muted);font-size:.92rem}
-.auth-footer a{color:var(--primary);font-weight:700}
-.auth-error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:12px 15px;border-radius:10px;margin-bottom:18px;font-size:.88rem;display:none}
-.auth-error.show{display:block}
-.toast{position:fixed;bottom:28px;right:28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 22px;box-shadow:var(--shadow-xl);z-index:200;transform:translateY(120px);opacity:0;transition:.4s;min-width:280px}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.success{border-left:4px solid #22c55e}
-.toast.error{border-left:4px solid #ef4444}
-.hidden{display:none!important}
-.empty-note{color:var(--text-muted);text-align:center;padding:24px;font-size:.9rem}
-@media (max-width:768px){.form-row{grid-template-columns:1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>رَشّح — منصة التوظيف الذكية</title>
+  <link rel="icon" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--blue:#3b82f6;--blue2:#2563eb;--light:#dbeafe;--bg:#f8fafc;--white:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--dark:#0f172a;--radius:16px;--shadow:0 1px 3px rgba(15,23,42,.07),0 1px 2px rgba(15,23,42,.04);--shadow-lg:0 18px 38px rgba(15,23,42,.12)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Cairo,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+    a{text-decoration:none;color:inherit}
+    button,input{font-family:inherit}
+    .container{width:min(1180px,calc(100% - 40px));margin:auto}
+    .site-header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .header-inner{height:82px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .logo img{width:140px;height:58px;object-fit:contain}
+    .nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .nav a,.nav button{border:0;background:transparent;color:var(--muted);font-size:.92rem;font-weight:700;padding:10px 13px;border-radius:10px;cursor:pointer}
+    .nav a:hover,.nav button:hover{background:var(--light);color:var(--blue)}
+    .btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;border-radius:11px;padding:12px 20px;font-weight:800;cursor:pointer;transition:.2s}
+    .btn-primary{background:var(--blue);color:#fff;box-shadow:0 7px 18px rgba(59,130,246,.24)}
+    .btn-primary:hover{background:var(--blue2);transform:translateY(-1px)}
+    .btn-outline{background:#fff;border:1px solid var(--blue);color:var(--blue)}
+    .btn-outline:hover{background:var(--blue);color:#fff}
+    .btn-ghost{background:transparent;color:var(--text)}
+    .hero{padding:94px 0 105px;text-align:center;overflow:hidden;position:relative;background:radial-gradient(circle at 50% 10%,#dbeafe 0,transparent 46%)}
+    .hero:before{content:"";position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(59,130,246,.06);top:-260px;right:-190px}
+    .hero>*{position:relative}
+    .eyebrow{display:inline-block;color:var(--blue);background:#eff6ff;border:1px solid #bfdbfe;border-radius:999px;padding:7px 16px;font-size:.82rem;font-weight:800;margin-bottom:19px}
+    h1{font-size:clamp(2rem,5vw,4rem);font-weight:900;line-height:1.22;max-width:920px;margin:auto}
+    h1 span{color:var(--blue)}
+    .hero p{max-width:710px;margin:22px auto 34px;font-size:1.12rem;color:var(--muted)}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    section{padding:84px 0}
+    .section-head{text-align:center;margin-bottom:44px}
+    .section-head .eyebrow{margin-bottom:10px}
+    .section-head h2{font-size:clamp(1.7rem,3vw,2.35rem);font-weight:900;margin-bottom:10px}
+    .section-head p{color:var(--muted)}
+    .features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .feature-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:27px;box-shadow:var(--shadow)}
+    .feature-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:14px;background:var(--light);color:var(--blue);font-size:1.45rem;margin-bottom:16px}
+    .feature-card h3{font-size:1.04rem;font-weight:900;margin-bottom:8px}
+    .feature-card p{color:var(--muted);font-size:.9rem}
+    .stats{background:#fff;border-block:1px solid var(--border);padding:55px 0}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;gap:20px}
+    .stat strong{display:block;color:var(--blue);font-size:2.35rem;font-weight:900;line-height:1.2}
+    .stat span{color:var(--muted);font-size:.9rem;font-weight:700}
+    .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .article-card,.testimonial{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .article-image{height:145px;background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+    .article-card img{width:100%;height:145px;object-fit:cover;display:block}
+    .article-body{padding:19px}
+    .tag{display:inline-block;background:var(--light);color:var(--blue);border-radius:999px;padding:3px 10px;font-size:.72rem;font-weight:800;margin-bottom:8px}
+    .article-body h3{font-size:1rem;font-weight:900;line-height:1.55;margin-bottom:7px}
+    .article-body p{color:var(--muted);font-size:.86rem}
+    .testimonials{background:#fff;border-block:1px solid var(--border)}
+    .testimonial{padding:24px;background:var(--bg)}
+    .stars{color:#f59e0b;font-size:1rem;margin-bottom:11px}
+    .testimonial p{font-size:.92rem;margin-bottom:17px}
+    .person{display:flex;align-items:center;gap:10px}
+    .avatar{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:var(--light);color:var(--blue);font-weight:900}
+    .person strong{display:block;font-size:.88rem}.person span{font-size:.77rem;color:var(--muted)}
+    .cta-wrap{padding:82px 0}
+    .cta{background:linear-gradient(135deg,#2563eb,#1e3a8a);color:#fff;padding:63px 28px;border-radius:22px;text-align:center;box-shadow:var(--shadow-lg)}
+    .cta h2{font-size:clamp(1.7rem,3vw,2.45rem);font-weight:900}.cta p{margin:12px auto 24px;opacity:.9;max-width:620px}.cta .btn{background:#fff;color:var(--blue)}
+    footer{background:var(--dark);color:#94a3b8;padding:62px 0 25px}
+    .footer-grid{display:grid;grid-template-columns:1.45fr 1fr 1fr 1.2fr;gap:34px}
+    .footer-logo img{width:140px;height:58px;object-fit:contain}.footer-about{font-size:.88rem;margin-top:15px;max-width:300px;color:#94a3b8}
+    footer h4{font-size:.9rem;color:#fff;margin:9px 0 15px}.footer-links a{display:block;font-size:.86rem;margin:9px 0;color:#94a3b8}.footer-links a:hover{color:#fff}
+    .socials{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}.social{width:39px;height:39px;display:grid;place-items:center;border-radius:10px;background:#1e293b;color:#dbeafe;font-size:1rem}.social:hover{background:var(--blue)}
+    .bank{background:#1e293b;padding:15px;border-radius:12px;font-size:.79rem}.bank-row{display:flex;justify-content:space-between;gap:9px;padding:6px 0;border-bottom:1px solid #334155}.bank-row:last-child{border:0}.bank-row span:last-child{color:#fff;direction:ltr;text-align:left;overflow-wrap:anywhere}
+    .copyright{border-top:1px solid #1e293b;margin-top:36px;padding-top:18px;text-align:center;font-size:.8rem;color:#64748b}
+    .modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:100;padding:20px;overflow:auto}.modal.open{display:flex;justify-content:center;align-items:center}
+    .modal-box{width:min(100%,500px);background:#fff;border-radius:18px;box-shadow:var(--shadow-lg);overflow:hidden;max-height:calc(100vh - 40px);overflow-y:auto}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:1}.modal-head h3{font-size:1.15rem;font-weight:900}.close{border:0;background:transparent;font-size:1.7rem;color:var(--muted);cursor:pointer}
+    .modal-content{padding:25px}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);margin-bottom:22px}.tab{border:0;background:#fff;padding:13px;color:var(--muted);font-weight:900;cursor:pointer}.tab.active{color:var(--blue);border-bottom:3px solid var(--blue)}
+    .form{display:none}.form.active{display:block}.field{margin-bottom:14px}.field label{display:block;font-size:.84rem;font-weight:800;margin-bottom:6px}.field input{width:100%;border:1px solid var(--border);background:var(--bg);border-radius:11px;padding:12px 13px;font-size:.96rem}.field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--light);background:#fff}.form .btn{width:100%;margin-top:7px;padding:13px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.error{display:none;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:10px;padding:10px 12px;font-size:.84rem;margin-bottom:14px}.error.show{display:block}.form-foot{text-align:center;font-size:.86rem;color:var(--muted);margin-top:18px}.form-foot a{color:var(--blue);font-weight:800}
+    .toast{position:fixed;bottom:22px;right:22px;z-index:200;background:#fff;border:1px solid var(--border);border-radius:13px;padding:14px 18px;box-shadow:var(--shadow-lg);transform:translateY(120px);opacity:0;transition:.3s;min-width:250px}.toast.show{transform:translateY(0);opacity:1}.toast.success{border-right:4px solid #22c55e}.toast.error{border-right:4px solid #ef4444}
+    .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px}
+    @media(max-width:960px){.features-grid{grid-template-columns:repeat(2,1fr)}.cards-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:600px){.header-inner{height:auto;padding:12px 0;align-items:flex-start}.nav{justify-content:flex-end}.nav a{display:none}.features-grid,.cards-grid,.stats-grid,.footer-grid,.form-row{grid-template-columns:1fr}.hero{padding:72px 0}.footer-grid{gap:24px}.logo img{width:115px}.nav .btn{padding:9px 11px;font-size:.78rem}}
+  </style>
 </head>
 <body>
-<header>
-<div class="container header-inner">
-<a href="/" class="logo"><img src="/rasheh-logo.png" alt="رَشّح" width="145" height="64"></a>
-<nav>
-<a href="#features" class="nav-link">المميزات</a>
-<a href="/pricing.html" class="nav-link">الباقات</a>
-<a href="#articles" class="nav-link">المقالات</a>
-<a href="#testimonials" class="nav-link">آراء العملاء</a>
-<div id="authButtons" style="display:flex;align-items:center;gap:8px"></div>
-</nav>
-</div>
-</header>
-
-<main>
-<section class="hero">
-<div class="container hero-inner">
-<div class="hero-badge">✦ منصة التوظيف الذكية</div>
-<h1 id="hero-title">وظّف أفضل الكفاءات في ثوانٍ مع منصة <span class="hl">رَشّح</span> الذكية</h1>
-<p id="hero-text">محرك ذكي يربط أصحاب الشركات بالكفاءات الجاهزة، مع فرز دقيق وحماية كاملة لبيانات المرشحين.</p>
-<div class="hero-actions">
-<button class="btn btn-primary btn-lg" id="watchVideoBtn" type="button" style="display:none">▶ شاهد كيف تعمل</button>
-<a href="#contact" class="btn btn-outline btn-lg">تواصل معنا</a>
-</div>
-</div>
-</section>
-
-<section class="features" id="features">
-<div class="container">
-<div class="features-header"><span class="section-tag">لماذا رَشّح</span><h2>منصة متكاملة للتوظيف الذكي</h2><p>أدوات قوية ومصممة بعناية لتختصر وقت التوظيف وتضمن أفضل المطابقات</p></div>
-<div class="features-grid">
-<article class="card"><div class="card-icon">🔍</div><h3>مطابقة ذكية فورية</h3><p>خوارزمية متطورة تبحث بالخبرة والمهارات والمدينة في ثوانٍ.</p></article>
-<article class="card"><div class="card-icon">🛡️</div><h3>حماية كاملة للبيانات</h3><p>خصوصية المرشحين أولوية، والبيانات مشفرة بالكامل.</p></article>
-<article class="card"><div class="card-icon">📊</div><h3>تقارير لحظية</h3><p>إحصائيات مباشرة وحالة الطلبات لاتخاذ قرارات أسرع.</p></article>
-<article class="card"><div class="card-icon">🤝</div><h3>فريق دعم مخصص</h3><p>مدير حساب يساعدك في كل خطوة من التوظيف.</p></article>
-</div>
-</div>
-</section>
-
-<section class="stats-bar" id="stats">
-<div class="container">
-<div class="stats-grid">
-<div><div class="stat-value" id="stat-clients">0</div><div class="stat-label">شركة تثق بنا</div></div>
-<div><div class="stat-value" id="stat-candidates">0</div><div class="stat-label">مرشح مؤهل</div></div>
-<div><div class="stat-value" id="stat-placements">0</div><div class="stat-label">تعيين ناجح</div></div>
-<div><div class="stat-value" id="stat-time">—</div><div class="stat-label">متوسط وقت التوظيف</div></div>
-</div>
-</div>
-</section>
-
-<section class="articles" id="articles">
-<div class="container">
-<div class="features-header"><span class="section-tag">مدونة رَشّح</span><h2>مقالات ونصائح للتوظيف</h2></div>
-<div class="articles-grid" id="articlesGrid"><p class="empty-note">لا توجد مقالات منشورة حالياً</p></div>
-</div>
-</section>
-
-<section class="testimonials" id="testimonials">
-<div class="container">
-<div class="features-header"><span class="section-tag">آراء عملائنا</span><h2>ماذا يقول عملاؤنا عن رَشّح؟</h2></div>
-<div class="testi-grid" id="testimonialsGrid"><p class="empty-note">لا توجد آراء منشورة حالياً</p></div>
-</div>
-</section>
-
-<section class="cta-section" id="contact">
-<div class="container">
-<div class="cta-card">
-<div class="cta-content">
-<h2>جاهز لتوظيف أفضل الكفاءات؟</h2>
-<p>انضم لآلاف الشركات التي اختصرت وقت التوظيف مع رَشّح.</p>
-<button class="btn btn-primary btn-lg" id="ctaSignupBtn" type="button">إنشاء حساب شركة مجاناً</button>
-</div>
-</div>
-</div>
-</section>
-</main>
-
-<footer>
-<div class="container">
-<div class="footer-top">
-<div class="footer-brand">
-<a href="/" class="logo" style="display:inline-flex;margin-bottom:20px"><img src="/rasheh-logo.png" alt="رَشّح" width="145" height="64"></a>
-<p>منصة التوظيف الذكية التي تربط الشركات بالكفاءات الجاهزة بمطابقة دقيقة وحماية كاملة للبيانات.</p>
-<div class="socials" id="footer-socials"></div>
-</div>
-<nav class="footer-col"><h4>الشركة</h4><a href="#features">المميزات</a><a href="#articles">المدونة</a><a href="#testimonials">آراء العملاء</a></nav>
-<nav class="footer-col"><h4>لأصحاب الشركات</h4><a href="#" id="footerSignupLink">إنشاء حساب</a><a href="/pricing.html">الباقات والأسعار</a><a href="/candidates.html">تصفح المرشحين</a><a href="/billing.html">حسابي والفواتير</a></nav>
-<div class="footer-col">
-<h4>معلومات الدفع</h4>
-<div class="payment-box">
-<h5>الحساب البنكي</h5>
-<div class="payment-row"><span>البنك</span><span id="pay-bank-name">—</span></div>
-<div class="payment-row"><span>اسم الحساب</span><span id="pay-account-name">—</span></div>
-<div class="payment-row"><span>الآيبان</span><span id="pay-iban">—</span></div>
-</div>
-</div>
-</div>
-<div class="footer-bottom"><p>© 2026 رَشّح. جميع الحقوق محفوظة.</p></div>
-</div>
-</footer>
-
-<div class="modal" id="videoModal"><div class="modal-content"><div class="modal-header"><h3 id="video-title">فيديو توضيحي</h3><button class="modal-close" id="closeVideoModal">&times;</button></div><div class="video-wrapper"><iframe id="videoFrame" src="" allow="autoplay" allowfullscreen></iframe></div></div></div>
-
-<div class="modal auth-modal" id="authModal">
-<div class="modal-content">
-<div class="modal-header"><h3 id="authModalTitle">دخول الشركات</h3><button class="modal-close" id="closeAuthModal">&times;</button></div>
-<div class="modal-body" style="padding:32px">
-<div class="auth-tabs"><button class="auth-tab active" id="tab-login" type="button">تسجيل الدخول</button><button class="auth-tab" id="tab-signup" type="button">إنشاء حساب جديد</button></div>
-<form class="auth-form active" id="loginForm">
-<div class="auth-error" id="loginError"></div>
-<div class="form-group"><label class="form-label" for="loginEmail">البريد الإلكتروني</label><input type="email" class="form-input" id="loginEmail" required autocomplete="username"></div>
-<div class="form-group"><label class="form-label" for="loginPassword">كلمة المرور</label><input type="password" class="form-input" id="loginPassword" required autocomplete="current-password"></div>
-<button type="submit" class="btn btn-primary auth-submit">دخول</button>
-</form>
-<form class="auth-form" id="signupForm">
-<div class="auth-error" id="signupError"></div>
-<div class="form-group"><label class="form-label" for="signupCompanyName">اسم الشركة</label><input type="text" class="form-input" id="signupCompanyName" required></div>
-<div class="form-row">
-<div class="form-group"><label class="form-label" for="signupContactPerson">اسم المسؤول</label><input type="text" class="form-input" id="signupContactPerson" required></div>
-<div class="form-group"><label class="form-label" for="signupCity">المدينة</label><input type="text" class="form-input" id="signupCity" required></div>
-</div>
-<div class="form-group"><label class="form-label" for="signupEmail">البريد الإلكتروني</label><input type="email" class="form-input" id="signupEmail" required autocomplete="username"></div>
-<div class="form-group"><label class="form-label" for="signupPhone">رقم الجوال</label><input type="tel" class="form-input" id="signupPhone" required></div>
-<div class="form-row">
-<div class="form-group"><label class="form-label" for="signupPassword">كلمة المرور</label><input type="password" class="form-input" id="signupPassword" required minlength="8" autocomplete="new-password"></div>
-<div class="form-group"><label class="form-label" for="signupConfirmPassword">تأكيد كلمة المرور</label><input type="password" class="form-input" id="signupConfirmPassword" required autocomplete="new-password"></div>
-</div>
-<button type="submit" class="btn btn-primary auth-submit">إنشاء الحساب</button>
-</form>
-<div class="auth-footer" id="authFooterText">لا تملك حساب؟ <a href="#" id="switchLink">إنشاء حساب جديد</a></div>
-</div>
-</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-const API='/api';
-let token=localStorage.getItem('rasheh_token')||null;
-let me=null;
-
-function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>t.classList.remove('show'),4000)}
-
-async function api(path,opts={}){
-  const headers={'Content-Type':'application/json',...opts.headers};
-  if(token) headers.Authorization='Bearer '+token;
-  const res=await fetch(API+path,{...opts,headers});
-  const text=await res.text();
-  let data;
-  try{data=JSON.parse(text)}catch(e){return null}
-  if(res.status===401){token=null;localStorage.removeItem('rasheh_token');me=null;renderAuth()}
-  return data;
-}
-
-function renderAuth(){
-  const el=document.getElementById('authButtons');
-  if(me?.profile?.is_admin){
-    el.innerHTML='<span class="nav-link">'+me.user.email+'</span><a href="/admin.html" class="btn btn-primary">لوحة الإدارة</a><button class="btn btn-ghost" id="logoutBtn">خروج</button>';
-  }else if(me?.user){
-    el.innerHTML='<span class="nav-link">'+me.user.email+'</span><a href="/candidates.html" class="btn btn-primary">تصفح المرشحين</a><button class="btn btn-ghost" id="logoutBtn">خروج</button>';
-  }else{
-    el.innerHTML='<button class="btn btn-ghost" id="openLoginBtn">تسجيل الدخول</button><button class="btn btn-primary" id="openSignupBtn">إنشاء حساب</button>';
-  }
-  document.getElementById('logoutBtn')?.addEventListener('click',logout);
-  document.getElementById('openLoginBtn')?.addEventListener('click',()=>openAuth('login'));
-  document.getElementById('openSignupBtn')?.addEventListener('click',()=>openAuth('signup'));
-}
-
-function logout(){token=null;localStorage.removeItem('rasheh_token');me=null;renderAuth();toast('تم تسجيل الخروج','success')}
-
-async function checkAuth(){
-  if(!token) return renderAuth();
-  const data=await api('/me');
-  if(data?.user) me=data; else {token=null;localStorage.removeItem('rasheh_token')}
-  renderAuth();
-}
-
-const authModal=document.getElementById('authModal'),tabLogin=document.getElementById('tab-login'),tabSignup=document.getElementById('tab-signup'),loginForm=document.getElementById('loginForm'),signupForm=document.getElementById('signupForm'),authTitle=document.getElementById('authModalTitle'),authFooter=document.getElementById('authFooterText');
-
-function switchTab(tab){
-  const isLogin=tab==='login';
-  tabLogin.classList.toggle('active',isLogin);
-  tabSignup.classList.toggle('active',!isLogin);
-  loginForm.classList.toggle('active',isLogin);
-  signupForm.classList.toggle('active',!isLogin);
-  authTitle.textContent=isLogin?'دخول الشركات':'إنشاء حساب شركة';
-  authFooter.innerHTML=isLogin?'لا تملك حساب؟ <a href="#" id="switchLink">إنشاء حساب جديد</a>':'تملك حساب؟ <a href="#" id="switchLink">تسجيل الدخول</a>';
-  document.getElementById('switchLink').onclick=(e)=>{e.preventDefault();switchTab(isLogin?'signup':'login')};
-}
-function openAuth(tab){authModal.classList.add('open');document.body.style.overflow='hidden';switchTab(tab)}
-function closeAuth(){authModal.classList.remove('open');document.body.style.overflow=''}
-tabLogin.onclick=()=>switchTab('login');tabSignup.onclick=()=>switchTab('signup');
-document.getElementById('closeAuthModal').onclick=closeAuth;
-authModal.onclick=(e)=>{if(e.target===authModal)closeAuth()};
-document.getElementById('ctaSignupBtn').onclick=()=>openAuth('signup');
-document.getElementById('footerSignupLink').onclick=(e)=>{e.preventDefault();openAuth('signup')};
-
-loginForm.addEventListener('submit',async(e)=>{
-  e.preventDefault();
-  const err=document.getElementById('loginError');err.classList.remove('show');
-  const btn=loginForm.querySelector('.auth-submit');btn.disabled=true;btn.textContent='جاري الدخول...';
-  const email=document.getElementById('loginEmail').value.trim();
-  const password=document.getElementById('loginPassword').value;
-  try{
-    const res=await fetch(API+'/auth?action=login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
-    const data=await res.json();
-    if(data.access_token){
-      token=data.access_token;localStorage.setItem('rasheh_token',token);
-      closeAuth();await checkAuth();toast('تم تسجيل الدخول بنجاح','success');
-    }else{err.textContent=data.detail||'بيانات الدخول غير صحيحة';err.classList.add('show')}
-  }catch(e){err.textContent='حدث خطأ في الاتصال بالخادم';err.classList.add('show')}
-  finally{btn.disabled=false;btn.textContent='دخول'}
-});
-
-signupForm.addEventListener('submit',async(e)=>{
-  e.preventDefault();
-  const err=document.getElementById('signupError');err.classList.remove('show');
-  const password=document.getElementById('signupPassword').value;
-  const confirm=document.getElementById('signupConfirmPassword').value;
-  if(password.length<8){err.textContent='كلمة المرور يجب أن تكون 8 أحرف على الأقل';err.classList.add('show');return}
-  if(password!==confirm){err.textContent='كلمتا المرور غير متطابقتين';err.classList.add('show');return}
-  const btn=signupForm.querySelector('.auth-submit');btn.disabled=true;btn.textContent='جاري إنشاء الحساب...';
-  const payload={
-    company_name:document.getElementById('signupCompanyName').value.trim(),
-    contact_person:document.getElementById('signupContactPerson').value.trim(),
-    city:document.getElementById('signupCity').value.trim(),
-    email:document.getElementById('signupEmail').value.trim(),
-    phone:document.getElementById('signupPhone').value.trim(),
-    password
-  };
-  try{
-    const res=await fetch(API+'/auth?action=register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    const data=await res.json();
-    if(data.ok){toast('تم إنشاء الحساب! يرجى تسجيل الدخول','success');switchTab('login');signupForm.reset()}
-    else{err.textContent=data.detail||'فشل إنشاء الحساب';err.classList.add('show')}
-  }catch(e){err.textContent='حدث خطأ في الاتصال بالخادم';err.classList.add('show')}
-  finally{btn.disabled=false;btn.textContent='إنشاء الحساب'}
-});
-
-const videoModal=document.getElementById('videoModal'),videoFrame=document.getElementById('videoFrame');
-function openVideo(url){
-  let e=url;
-  if(url.includes('youtube.com/watch?v=')) e=url.replace('watch?v=','embed/');
-  else if(url.includes('youtu.be/')) e=url.replace('youtu.be/','youtube.com/embed/');
-  videoFrame.src=e+(e.includes('?')?'&':'?')+'autoplay=1';
-  videoModal.classList.add('open');document.body.style.overflow='hidden';
-}
-function closeVideo(){videoModal.classList.remove('open');videoFrame.src='';document.body.style.overflow=''}
-document.getElementById('closeVideoModal').onclick=closeVideo;
-videoModal.onclick=(e)=>{if(e.target===videoModal)closeVideo()};
-
-const socialIcons={whatsapp:'📱',linkedin:'💼',instagram:'📷',x:'✕',email:'✉️'};
-function socialHref(key,val){
-  if(!val) return null;
-  if(key==='email') return val.includes('@') ? 'mailto:'+val : val;
-  if(key==='whatsapp') return val.startsWith('http')? val : 'https://wa.me/'+val.replace(/[^0-9]/g,'');
-  return val;
-}
-
-async function loadContent(){
-  const data=await api('/public?resource=content');
-  const c=data?.content||{};
-  document.getElementById('hero-text').textContent=c.hero_text||'محرك ذكي يربط أصحاب الشركات بالكفاءات الجاهزة، مع فرز دقيق وحماية كاملة لبيانات المرشحين.';
-  const watchBtn=document.getElementById('watchVideoBtn');
-  if(c.video_url){
-    document.getElementById('video-title').textContent=c.video_title||'فيديو توضيحي';
-    watchBtn.style.display='inline-flex';
-    watchBtn.onclick=()=>openVideo(c.video_url);
-  }
-  const soc=document.getElementById('footer-socials');
-  soc.innerHTML='';
-  const socials=c.socials||{};
-  let any=false;
-  ['whatsapp','linkedin','instagram','x','email'].forEach(k=>{
-    const href=socialHref(k,socials[k]);
-    if(href){any=true;const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener';a.textContent=socialIcons[k];soc.appendChild(a)}
-  });
-  if(!any) soc.innerHTML='<p style="color:#475569;font-size:.82rem;margin-top:8px">سيتم إضافة روابط التواصل قريباً</p>';
-  const bank=c.bank||{};
-  document.getElementById('pay-bank-name').textContent=bank.name||'—';
-  document.getElementById('pay-account-name').textContent=bank.account_name||'—';
-  document.getElementById('pay-iban').textContent=bank.iban||'—';
-}
-
-async function loadStats(){
-  const data=await api('/public?resource=stats');
-  if(!data?.stats) return;
-  document.getElementById('stat-clients').textContent=data.stats.totalClients||0;
-  document.getElementById('stat-candidates').textContent=data.stats.totalCandidates||0;
-  document.getElementById('stat-placements').textContent=data.stats.totalPlacements||0;
-  document.getElementById('stat-time').textContent=data.stats.avgTimeToHire||'—';
-}
-
-async function loadArticles(){
-  const data=await api('/public?resource=articles');
-  const grid=document.getElementById('articlesGrid');
-  if(!data?.articles?.length){grid.innerHTML='<p class="empty-note">لا توجد مقالات منشورة حالياً</p>';return}
-  grid.innerHTML=data.articles.slice(0,6).map(a=>`
-    <article class="article-card">
-      ${a.cover_image?`<img class="article-cover" src="${a.cover_image}" alt="">`:'<div class="article-cover"></div>'}
-      <div class="article-body">${a.tags?.[0]?`<span class="article-tag">${a.tags[0]}</span>`:''}<h3 class="article-title">${a.title}</h3><p class="article-excerpt">${a.excerpt||''}</p></div>
-    </article>
-  `).join('');
-}
-
-async function loadTestimonials(){
-  const data=await api('/public?resource=testimonials');
-  const grid=document.getElementById('testimonialsGrid');
-  if(!data?.testimonials?.length){grid.innerHTML='<p class="empty-note">لا توجد آراء منشورة حالياً</p>';return}
-  grid.innerHTML=data.testimonials.slice(0,6).map(t=>`
-    <div class="testi-card">
-      <div class="testi-stars">${'★'.repeat(t.rating||5)}${'☆'.repeat(5-(t.rating||5))}</div>
-      <p class="testi-content">"${t.content}"</p>
-      <div class="testi-author"><div class="testi-avatar">${(t.author_name||'?').charAt(0)}</div><div><div class="testi-name">${t.author_name}</div><div class="testi-role">${t.author_role||''}${t.company_name?' - '+t.company_name:''}</div></div></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/"><img src="/rasheh-logo.png" alt="رَشّح"></a>
+      <nav class="nav">
+        <a href="#features">المميزات</a>
+        <a href="/pricing.html">الباقات</a>
+        <a href="#articles">المقالات</a>
+        <div id="authButtons"></div>
+      </nav>
     </div>
-  `).join('');
-}
+  </header>
 
-loadContent();loadStats();loadArticles();loadTestimonials();checkAuth();
-</script>
-</body>
-</html>
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <span class="eyebrow">✦ منصة التوظيف الذكية</span>
+        <h1 id="heroTitle">وظّف أفضل الكفاء
