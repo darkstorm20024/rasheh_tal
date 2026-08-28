@@ -1,3 +1,19 @@
+Now the supporting files: .gitignore, full README.md, supabase_additions.sql (testimonials), and confirm supabase_plans.sql is intact.
+.gitignore
+Generated File
+supabase_additions
+SQL
+PUT_YOUR_LOGO_HERE
+Generated File
+Build a 3-tier payment billing portal — Stripe Checkout, PayPal, and bank transfer flows with automatic database updates via Webhooks
+Computer
+Stripe and PayPal Webhook integration checklist — event signatures, database state handlers, and fallback flows for failed payments
+Computer
+كيفية إعداد Webhooks لـ Stripe و PayPal لتحديث الباقات تلقائياً
+أفضل طريقة لتخزين وإدارة بيانات المستخدمين والباقات في قاعدة البيانات
+شرح ربط التحويلات البنكية اليدوية مع تفعيل الحسابات تلقائياً
+
+
 const { db, anon, reply, errorReply, readBody, ADMIN_EMAIL } = require('./_shared');
 
 async function handleLogin(req, res) {
@@ -70,4 +86,6 @@ module.exports = async (req, res) => {
   } catch (error) {
     return errorReply(res, error);
   }
+};
+
 };
